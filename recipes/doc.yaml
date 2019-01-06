@@ -1,0 +1,25 @@
+#
+#  All user documentation targets
+#
+
+root: true
+
+inherit:
+  - copy
+
+depends:
+  - planets::pdk-doc
+
+buildScript: |
+  # Usage: copyDoc package_name [path_in_package]
+  copyDoc() {
+    package=$1
+    dest=${1//::/\/}
+    mkdir -p "$dest"
+    shallowCopy "${BOB_DEP_PATHS[$package]}/${2:-.}" "$dest"
+  }
+
+  copyDoc planets::pdk-doc
+
+packageScript: |
+  shallowCopy "$1" .

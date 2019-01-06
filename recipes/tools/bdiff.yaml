@@ -1,0 +1,37 @@
+# bdiff
+
+inherit: [copy]
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: bdiff
+
+environment:
+  TARBALL: bdiff.tar.gz
+
+multiPackage:
+  bin:
+    inherit: [make]
+
+    buildScript: |
+      shallowCopy "$1" .
+      doMakeDefault
+
+    packageScript: |
+      cp $1/bdiff $1/bpatch .
+
+    provideTools:
+      bdiff: .
+
+  src:
+    buildVars: [TARBALL]
+    buildScript: |
+      shallowCopy "$1" .
+      rm -f ${TARBALL}
+      tar czf ${TARBALL} *
+
+    packageVars: [TARBALL]
+    packageScript: |
+      cp $1/${TARBALL} .

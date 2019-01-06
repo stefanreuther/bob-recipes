@@ -1,0 +1,38 @@
+# uchroot (user-mode chroot)
+# Used to manually set up sandboxes.
+
+inherit: [copy]
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: uchroot
+
+environment:
+  TARBALL: uchroot.tar.gz
+
+multiPackage:
+  bin:
+    inherit: [make]
+
+    buildScript: |
+      shallowCopy "$1" .
+      doMakeDefault
+
+    packageScript: |
+      cp $1/uchroot .
+
+    provideTools:
+      uchroot: .
+
+#  src:
+#    buildVars: [TARBALL]
+#    buildScript: |
+#      shallowCopy "$1" .
+#      rm -f ${TARBALL}
+#      tar czf ${TARBALL} *
+#
+#    packageVars: [TARBALL]
+#    packageScript: |
+#      cp $1/${TARBALL} .

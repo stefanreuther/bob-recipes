@@ -1,0 +1,16 @@
+# lesscss
+inherit:
+  - copy
+
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: ext/lesscss
+
+multiPackage:
+  bin:
+    buildScript: |
+      shallowCopy "$1" .
+
+    packageScript: |
+      shallowCopy "$1" .

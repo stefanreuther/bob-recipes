@@ -1,0 +1,15 @@
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: ext/lighttpd
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      $1/configure --prefix="/opt/lighttpd" --without-bzip2
+      doMake
+    packageScript: |
+      make -C "$1" prefix=$PWD install

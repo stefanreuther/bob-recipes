@@ -1,0 +1,18 @@
+inherit: [copy]
+
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: stargen
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      deepCopy "$1" .
+      doMakeDefault
+
+    packageScript: |
+      for i in stargen stargeni; do
+        cp "$1/$i" .
+      done

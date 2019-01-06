@@ -1,0 +1,3 @@
+policies:
+  cleanEnvironment: true
+  relativeIncludes: true

@@ -1,0 +1,31 @@
+# PlanetsCentral website
+inherit:
+  - copy
+
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: c2web
+
+multiPackage:
+  daily-bin:
+    depends:
+      - tools::jstool-bin
+      - planets::cc2res-bin
+      - planets::js-pcc-bin
+
+    buildScript: |
+      TODAY=$(date +%Y%m%d)
+      OUTPUT=$PWD
+      rm -rf *
+      cd $1
+      perl $1/install.pl \
+           -DLIB_VERSION=".$TODAY" \
+           -DUSER_VERSION=".$TODAY-T" \
+           --output="$OUTPUT" \
+           --assets="${BOB_DEP_PATHS[planets::cc2res-bin]}/web" \
+           --scripts="${BOB_DEP_PATHS[planets::js-pcc-bin]}" \
+           --jsmin="${BOB_DEP_PATHS[tools::jstool-bin]}/jsmin"
+
+    packageScript: |
+      shallowCopy "$1" .

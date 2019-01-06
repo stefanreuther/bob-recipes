@@ -1,0 +1,22 @@
+# js
+inherit:
+  - copy
+
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: js
+
+multiPackage:
+  pcc-bin:
+    inherit: [make]
+    depends:
+      - tools::lesscss-bin
+
+    buildScript: |
+      shallowCopy "$1" .
+      doMake -C projects/pcc LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-bin]}/node_modules/less/bin/lessc -su=on --clean-css" all
+
+    packageScript: |
+      shallowCopy "$1"/projects/pcc/out .
+

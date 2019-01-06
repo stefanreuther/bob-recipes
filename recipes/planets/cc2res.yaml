@@ -1,0 +1,22 @@
+# cc2res (PCC2 resources)
+inherit:
+  - copy
+
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT2}
+  module: planets/cc2res
+
+multiPackage:
+  bin:
+    depends:
+      - tools::stargen-bin
+      - tools::buildsys
+
+    # Note: parallel build does not (yet) work
+    buildScript: |
+      perl ${BOB_DEP_PATHS[tools::buildsys]}/Make.pl IN=$1 RESULT=result OUT=. STARGEN=${BOB_DEP_PATHS[tools::stargen-bin]}/stargen
+      make install
+
+    packageScript: |
+      shallowCopy "$1"/result .

@@ -1,0 +1,19 @@
+inherit: [copy]
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: maketurn
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      shallowCopy "$1" .
+      doMakeDefault
+
+    packageScript: |
+      for i in maketurn.txt maketurn; do
+        cp "$1/$i" .
+      done

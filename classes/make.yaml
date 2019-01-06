@@ -1,0 +1,18 @@
+# Make invocation.
+
+buildVars: [CC, CXX, CFLAGS, CXXFLAGS, LDFLAGS, TARGET, CROSS_COMPILE, RUN]
+buildVarsWeak: [NPROC]
+
+buildScript: |
+  # Call make with the given parameters.
+  # Automatically provides configuration (-j / NPROC).
+  # Use this whenever you just want to invoke "make".
+  doMake() {
+    make -j ${NPROC:-$(nproc)} "$@"
+  }
+
+  # Call make with default parameters provided by target.
+  # Use this to build programs that have no configuration script.
+  doMakeDefault() {
+    doMake CC="${CC}" CXX="${CXX}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" "$@"
+  }

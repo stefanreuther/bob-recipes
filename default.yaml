@@ -1,0 +1,3 @@
+environment:
+  CVSROOT: /home/stefan/cvsroot
+  CVSROOT2: /dos/e/repo/cvs

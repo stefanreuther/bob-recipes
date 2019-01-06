@@ -1,0 +1,57 @@
+# afl (foundation library)
+# used for all new stuff
+inherit:
+  - copy
+
+depends:
+  - tools::buildsys
+  - libs::cxxtest
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: afl
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}"
+      doMake
+      doMake test
+      doMake dist
+
+    packageScript: |
+      shallowCopy "$1/result" .
+#
+# #   # Coverage
+# #   cov:
+# #     root: true
+# #     inherit: [coverage]
+# #     buildScript: |
+# #       # Build with coverage enabled
+# #       deepCopy "$1" .
+# #       bash config.sh CXXTESTDIR="${BOB_DEP_PATHS[cxxtest]}" LDFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-O0 -W -Wall -ansi -pedantic -fmessage-length=0 -Wno-long-long -Wconversion -fprofile-arcs -ftest-coverage"
+# #       make -j4
+# #
+# #       # Initialize
+# #       coverage_init
+# #
+# #       # Run tests (generates *.gcda)
+# #       ./testsuite
+# #
+# #       # Create coverage
+# #       coverage_create afl "$PWD/afl/*" "$PWD/config/*" "$PWD/arch/*"
+# #
+# #     packageScript: |
+# #       shallowCopy "$1/coverage_report" .
+#
+#   # Documentation
+#   doxy:
+#     buildScript: |
+#       shallowCopy "$1" .
+#       doxygen
+#
+#     packageScript: |
+#       shallowCopy "$1/doxy_docs" .

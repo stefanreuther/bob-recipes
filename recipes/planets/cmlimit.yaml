@@ -1,0 +1,22 @@
+# cmlimit
+inherit:
+  - copy
+
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: cmlimit
+
+multiPackage:
+  bin:
+    inherit: [make]
+    depends:
+      - planets::pdk-bin
+    buildScript: |
+      deepCopy "$1" .
+      doMake CC="${CC}" PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/legacy dist
+
+    packageScript: |
+      for i in cmlimit.zip cmlimit cmlimit.html; do
+        cp "$1"/$i .
+      done

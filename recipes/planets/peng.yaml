@@ -1,0 +1,20 @@
+# peng
+inherit:
+  - copy
+
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: peng
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      deepCopy "$1" .
+      doMake all dist
+
+    packageScript: |
+      for i in peng.zip README.html README peng; do
+        cp "$1"/$i .
+      done

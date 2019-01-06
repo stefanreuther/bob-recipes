@@ -1,0 +1,15 @@
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: ext/redis
+
+multiPackage:
+  bin:
+    inherit: [make, copy]
+    buildScript: |
+      shallowCopy "$1" .
+      doMake PREFIX=/opt/redis
+    packageScript: |
+      make -C "$1" PREFIX=$PWD install

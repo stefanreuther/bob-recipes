@@ -1,0 +1,34 @@
+#
+#  Native build using clang
+#
+
+root: true
+
+environment:
+  CC: clang
+  CXX: clang++
+  CFLAGS: -O2 -W -Wall
+  CXXFLAGS: -O2 -W -Wall
+  LDFLAGS: ""
+  HOSTCC: clang
+  HOSTCXX: clang++
+  HOSTCFLAGS: -O2 -W -Wall
+  HOSTCXXFLAGS: -O2 -W -Wall
+  HOSTLDFLAGS: ""
+
+depends:
+  - libs::afl-bin
+  - planets::cmlimit-bin
+  - planets::lisp-bin
+  - planets::maketurn-bin
+  - planets::mfq-bin
+  - planets::pdk-bin
+  - planets::peng-bin
+  - tools::bdiff-bin
+  - tools::jstool-bin
+  - tools::stargen-bin
+  - tools::uchroot-bin
+  - tools::vsmake-bin
+
+buildScript: "true"
+packageScript: "true"

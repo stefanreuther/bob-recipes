@@ -1,0 +1,16 @@
+# proj9 (Makefile generator)
+
+inherit:
+  - copy
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: proj
+
+buildScript: |
+  shallowCopy "$1" .
+
+packageScript: |
+  shallowCopy "$1" .

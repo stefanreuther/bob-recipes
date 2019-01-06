@@ -1,0 +1,116 @@
+# PCC2
+inherit:
+  - copy
+  - make
+
+depends:
+  - libs::cxxtest
+#   - name: uchroot
+#     use: [tools]
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: cpluslib
+    dir: cpluslib
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: pcc-v2
+    dir: pcc-v2
+
+multiPackage:
+  # Binary
+  bin:
+    depends:
+      - planets::pdk-bin
+    buildVars: [RUN]
+    buildScript: |
+      # Fetch and set up source
+      deepCopy "$1" .
+      cd pcc-v2
+      ln -s ../cpluslib
+
+      # Build
+      ./configure --with-pdk=${BOB_DEP_PATHS[planets::pdk-bin]}
+      doMake
+      doMake CXXTESTDIR=${BOB_DEP_PATHS[libs::cxxtest]} testsuite
+      ${RUN} ./testsuite
+
+    packageScript: |
+      make -C "$1"/pcc-v2 prefix="$PWD" INSTALL_FLAGS=-O install
+
+#   # Coverage
+#   cov:
+#     root: true
+#     inherit: [coverage]
+#     buildScript: |
+#       # Fetch and set up source
+#       deepCopy "$1" .
+#       cd pcc-v2
+#       ln -s ../cpluslib
+#
+#       # Build with coverage enabled
+#       ./configure LDFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-O0 -fprofile-arcs -ftest-coverage"
+#       make -j4 CXXTESTDIR=$2 testsuite
+#
+#       # Initialize
+#       coverage_init
+#
+#       # Run tests (generates *.gcda)
+#       ./testsuite
+#
+#       # Create coverage
+#       coverage_create PCC2 "$PWD/arch/*" "$PWD/client/*" "$PWD/flak/*" "$PWD/game/*" "$PWD/gfx/*" "$PWD/int/*" "$PWD/io/*" "$PWD/resmgr/*" "$PWD/sound/*" "$PWD/ui/*" "$PWD/util/*"
+#
+#     packageScript: |
+#       shallowCopy "$1/pcc-v2/coverage_report" .
+#
+#   # PCC2 for i386 (Debian package built with gcc-3.3 toolchain from Debian 3.0 for maximum compatibility)
+#   i386:
+#     root: true
+#     depends:
+#       - toolchain-i386
+#       - planets::pdk-i386
+#     buildTools: [uchroot]
+#     buildScript: |
+#       # Jail function
+#       jail() {
+#         uchroot -R/="${BOB_DEP_PATHS[toolchain-i386]}" -W/dev=/dev -W/tmp=/tmp -W/home=. \
+#             -R/home/cxxtest="${BOB_DEP_PATHS[cxxtest]}" \
+#             -R/home/pdk="${BOB_DEP_PATHS[planets::pdk-i386]}" \
+#             -DLC_ALL=C -C/home/pcc-v2 "$@"
+#       }
+#
+#       # Fetch and set up source
+#       deepCopy "$1" .
+#       ln -sf ../cpluslib pcc-v2/cpluslib
+#       mkdir cxxtest
+#       mkdir pdk
+#
+#       # Build in jail
+#       jail ./configure CC=gcc-3.3 --disable-inplace --with-pdk=/home/pdk
+#       jail make -j4
+#       jail make CXXTESTDIR=/home/cxxtest testsuite
+#       jail ./testsuite
+#       jail --root make deb
+#     packageScript: |
+#       cp "$1"/pcc-v2/pcc2_*.deb .
+#
+#   # PCC2 doc. This is a subset of any binary distribution.
+#   doc:
+#     root: true
+#     buildScript: |
+#       # Fetch and set up source
+#       deepCopy "$1" .
+#       cd pcc-v2
+#       ln -s ../cpluslib
+#
+#       # Build
+#       ./configure
+#       make LC_ALL=en_US.UTF-8 manual
+#       make LC_ALL=en_US.UTF-8 -C doc
+#     packageScript: |
+#       cp "$1/pcc-v2/doc/pcc2help.html" .
+#       cp "$1/pcc-v2/doc/pcc2interpreter.html" .
+

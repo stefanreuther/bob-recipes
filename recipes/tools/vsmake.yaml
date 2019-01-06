@@ -1,0 +1,42 @@
+# vsmake
+
+inherit: [copy]
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: vsmake
+
+environment:
+  TARBALL: vsmake.tar.gz
+
+depends:
+  - tools::buildsys
+
+multiPackage:
+  bin:
+    inherit: [make]
+
+    buildScript: |
+      #shallowCopy "$1" .
+      #doMakeDefault
+      perl "$2"/Make.pl IN="$1" OUT="." CXX="${CC}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
+      doMake
+
+    packageScript: |
+      cp $1/vsmake $1/vsmake.txt .
+
+    provideTools:
+      vsmake: .
+
+  src:
+    buildVars: [TARBALL]
+    buildScript: |
+      shallowCopy "$1" .
+      rm -f ${TARBALL}
+      tar czf ${TARBALL} *
+
+    packageVars: [TARBALL]
+    packageScript: |
+      cp $1/${TARBALL} .

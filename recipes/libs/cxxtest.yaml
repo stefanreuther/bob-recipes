@@ -1,0 +1,17 @@
+# CxxTest
+# This is a header-only library so we only need to pass information from checkout to build to package.
+
+inherit:
+  - copy
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: cxxtest
+
+buildScript: |
+  shallowCopy "$1" .
+
+packageScript: |
+  shallowCopy "$1" .

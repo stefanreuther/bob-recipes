@@ -1,0 +1,27 @@
+# jstool (jsmin)
+
+inherit: [copy]
+
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: jstool
+    dir: jstool
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: cpluslib
+    dir: cpluslib
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      deepCopy "$1" .
+      ln -sfn ../cpluslib jstool/cpluslib
+      doMakeDefault -C cpluslib cpluslib/config.h
+      doMakeDefault -C jstool CXXFLAGS="${CXXFLAGS} -Icpluslib -I."
+
+    packageScript: |
+      for i in jsmin jsmin0 cssmin; do
+        cp "$1/jstool/$i" .
+      done

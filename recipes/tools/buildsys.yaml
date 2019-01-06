@@ -1,0 +1,15 @@
+inherit:
+  - copy
+
+checkoutSCM:
+  - scm: git
+    url: /home/stefan/src/bs
+    dir: .
+
+buildScript: |
+  shallowCopy $1 .
+
+packageScript: |
+  shallowCopy $1 .
+
+
