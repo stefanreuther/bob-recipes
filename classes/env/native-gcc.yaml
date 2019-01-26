@@ -1,0 +1,15 @@
+environment:
+  CC: gcc
+  CXX: g++
+  CFLAGS: -O2 -W -Wall
+  CXXFLAGS: -O2 -W -Wall
+  LDFLAGS: ""
+  RUN: ""
+  CROSS_COMPILE: ""
+  TARGET: POSIX
+
+  HOSTCC: gcc
+  HOSTCXX: g++
+  HOSTCFLAGS: -O2 -W -Wall
+  HOSTCXXFLAGS: -O2 -W -Wall
+  HOSTLDFLAGS: ""

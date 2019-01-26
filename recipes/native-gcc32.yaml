@@ -10,6 +10,10 @@ environment:
   CFLAGS: -O2 -W -Wall
   CXXFLAGS: -O2 -W -Wall
   LDFLAGS: ""
+  RUN: ""
+  CROSS_COMPILE: ""
+  TARGET: POSIX
+
   HOSTCC: gcc -m32
   HOSTCXX: g++ -m32
   HOSTCFLAGS: -O2 -W -Wall

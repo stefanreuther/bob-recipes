@@ -1,0 +1,18 @@
+root: true
+
+inherit:
+  - copy
+
+depends:
+  - libs::afl-tags
+
+buildScript: |
+  for i in "${!BOB_DEP_PATHS[@]}"; do
+    dirname=${i%-tags}
+    dirname=${dirname##*::}
+    mkdir -p "$dirname"
+    cp "${BOB_DEP_PATHS[$i]}/TAGS" "$dirname/TAGS"
+  done
+
+packageScript: |
+  shallowCopy "$1" .

@@ -3,7 +3,7 @@ inherit:
 
 checkoutSCM:
   - scm: git
-    url: /home/stefan/src/bs
+    url: ${GITROOT}/bs
     dir: .
 
 buildScript: |

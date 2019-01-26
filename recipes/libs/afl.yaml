@@ -14,27 +14,43 @@ checkoutSCM:
   module: afl
 
 multiPackage:
+  # Regular binary package
   bin:
     inherit: [make]
     buildScript: |
       perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}"
       doMake
       doMake test
-      doMake dist
+      doMake install
 
     packageScript: |
       shallowCopy "$1/result" .
-#
-# #   # Coverage
-# #   cov:
-# #     root: true
+
+  host:
+    depends:
+      - libs::afl-bin
+    environment:
+      CC: ${HOSTCC}
+      CXX: ${HOSTCXX}
+      CFLAGS: ${HOSTCFLAGS}
+      CXXFLAGS: ${HOSTCXXFLAGS}
+      LDFLAGS: ${HOSTLDFLAGS}
+      CROSS_COMPILE: ""
+      TARGET: "POSIX"
+      RUN: ""
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[libs::afl-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .
+
+  # Coverage report
+  cov:
+    inherit: [make]
 # #     inherit: [coverage]
-# #     buildScript: |
-# #       # Build with coverage enabled
-# #       deepCopy "$1" .
-# #       bash config.sh CXXTESTDIR="${BOB_DEP_PATHS[cxxtest]}" LDFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-O0 -W -Wall -ansi -pedantic -fmessage-length=0 -Wno-long-long -Wconversion -fprofile-arcs -ftest-coverage"
-# #       make -j4
-# #
+    buildScript: |
+      # Build with coverage enabled
+      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}" --with-coverage
+      doMake
 # #       # Initialize
 # #       coverage_init
 # #
@@ -44,14 +60,23 @@ multiPackage:
 # #       # Create coverage
 # #       coverage_create afl "$PWD/afl/*" "$PWD/config/*" "$PWD/arch/*"
 # #
-# #     packageScript: |
+    packageScript: |
+      true
 # #       shallowCopy "$1/coverage_report" .
-#
-#   # Documentation
-#   doxy:
-#     buildScript: |
-#       shallowCopy "$1" .
-#       doxygen
-#
-#     packageScript: |
-#       shallowCopy "$1/doxy_docs" .
+
+  # Documentation
+  doxy:
+    inherit: [doxygen]
+    buildScript: |
+      buildDoxygen "$1"
+
+    packageScript: |
+      packageDoxygen "$1"
+
+  tags:
+    buildScript: |
+      perl "$2"/Make.pl IN="$1" OUT="."
+      make tags
+
+    packageScript: |
+      cp "$1/TAGS" .

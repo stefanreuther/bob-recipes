@@ -1,0 +1,14 @@
+# tputuner
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: tputuner
+
+multiPackage:
+  bin:
+    inherit: [make]
+    buildScript: |
+      doMakeDefault VPATH="$1" -f "$1/Makefile"
+

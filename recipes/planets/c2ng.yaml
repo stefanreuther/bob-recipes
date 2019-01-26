@@ -1,0 +1,39 @@
+# c2ng (PCC2 next generation)
+
+inherit:
+  - copy
+
+depends:
+  - tools::buildsys
+  - libs::cxxtest
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  scm: cvs
+  cvsroot: ${CVSROOT}
+  module: c2ng
+
+multiPackage:
+  bin:
+    inherit: [make]
+    depends:
+      - libs::afl-bin
+
+    buildScript: |
+      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
+      doMake
+      doMake test
+      doMake install
+
+    packageScript: |
+      shallowCopy "$1"/result .
+
+  host:
+    inherit:
+      - env::host
+    depends:
+      - planets::c2ng-bin
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[planets::c2ng-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .

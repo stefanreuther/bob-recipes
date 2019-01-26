@@ -29,7 +29,7 @@ multiPackage:
       # Fetch and set up source
       deepCopy "$1" .
       cd pcc-v2
-      ln -s ../cpluslib
+      ln -sf ../cpluslib
 
       # Build
       ./configure --with-pdk=${BOB_DEP_PATHS[planets::pdk-bin]}
