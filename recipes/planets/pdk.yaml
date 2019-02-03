@@ -1,6 +1,9 @@
 inherit:
   - copy
 
+depends:
+  - tools::buildsys
+
 checkoutVars: [CVSROOT]
 checkoutSCM:
   - scm: cvs
@@ -12,18 +15,12 @@ multiPackage:
     # FIXME: port to buildsys
     inherit: [make]
     buildScript: |
-      deepCopy "$1" .
-      doMakeDefault all
+      perl "$2"/Make.pl IN="$1" OUT="." CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}"
+      doMake
+      doMake install
 
     packageScript: |
-      mkdir -p bin include lib
-      for i in phostpdk.h version.h;                          do cp "$1/$i" include/; done
-      for i in libpdk.a;                                      do cp "$1/$i" lib/;     done
-      for i in sendmess crack ptscore killrace pmaster pally; do cp "$1/$i" bin/;     done
-
-      # Some makefiles expect include/lib in one directory
-      mkdir -p legacy
-      cp include/* lib/* legacy
+      shallowCopy "$1"/result .
 
 #   # PDK i386 (sandbox build for consumption by other sandbox builds)
 #   i386:
@@ -44,11 +41,10 @@ multiPackage:
 #       done
 
   doc:
+    inherit: [make]
     buildScript: |
-      deepCopy "$1" .
-      make docs
+      perl "$2"/Make.pl IN="$1"
+      doMake install-doc
 
     packageScript: |
-      for i in pdk.inf pdk-api.txt; do
-      cp "$1/$i" .
-      done
+      shallowCopy "$1"/result/doc .
