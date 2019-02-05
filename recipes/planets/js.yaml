@@ -11,12 +11,26 @@ multiPackage:
   pcc-bin:
     inherit: [make]
     depends:
+      - tools::buildsys
       - tools::lesscss-bin
 
     buildScript: |
-      shallowCopy "$1" .
-      doMake -C projects/pcc LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-bin]}/node_modules/less/bin/lessc -su=on --clean-css" all
+      perl "$2"/Make.pl IN="$1/projects/pcc" OUT="out" LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-bin]}/node_modules/less/bin/lessc -su=on --clean-css"
+      doMake
 
     packageScript: |
-      shallowCopy "$1"/projects/pcc/out .
+      shallowCopy "$1"/out .
+
+  c2web-bin:
+    inherit: [make]
+    depends:
+      - tools::buildsys
+      - tools::lesscss-bin
+
+    buildScript: |
+      perl "$2"/Make.pl IN="$1/projects/c2web" OUT="out" LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-bin]}/node_modules/less/bin/lessc -su=on --clean-css"
+      doMake all-c2web
+
+    packageScript: |
+      shallowCopy "$1"/out .
 

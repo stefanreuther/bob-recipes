@@ -16,6 +16,7 @@ depends:
   - planets::cc2res-bin
   - planets::cmlimit-bin
   - planets::js-pcc-bin
+  - planets::js-c2web-bin
   - planets::lisp-bin
   - planets::maketurn-bin
   - planets::mfq-bin
