@@ -1,3 +1,6 @@
+# Environment: use configured host compiler as target
+# For use with utilities that are needed during the build process
+
 environment:
   CC: ${HOSTCC}
   CXX: ${HOSTCXX}

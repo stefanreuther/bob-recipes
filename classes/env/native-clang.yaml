@@ -1,17 +1,13 @@
-# Environment: gcc native build
+# Environment: native clang build
 
 environment:
-  CC: gcc
-  CXX: g++
+  CC: clang
+  CXX: clang++
   CFLAGS: -O2 -W -Wall
   CXXFLAGS: -O2 -W -Wall
   LDFLAGS: ""
-  RUN: ""
-  CROSS_COMPILE: ""
-  TARGET: POSIX
-
-  HOSTCC: gcc
-  HOSTCXX: g++
+  HOSTCC: clang
+  HOSTCXX: clang++
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""

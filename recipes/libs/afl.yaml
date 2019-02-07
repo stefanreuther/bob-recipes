@@ -75,7 +75,7 @@ multiPackage:
 
   tags:
     buildScript: |
-      perl "$2"/Make.pl IN="$1" OUT="."
+      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}"
       make tags
 
     packageScript: |

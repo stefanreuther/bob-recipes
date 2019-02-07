@@ -4,17 +4,8 @@
 
 root: true
 
-environment:
-  CC: clang
-  CXX: clang++
-  CFLAGS: -O2 -W -Wall
-  CXXFLAGS: -O2 -W -Wall
-  LDFLAGS: ""
-  HOSTCC: clang
-  HOSTCXX: clang++
-  HOSTCFLAGS: -O2 -W -Wall
-  HOSTCXXFLAGS: -O2 -W -Wall
-  HOSTLDFLAGS: ""
+inherit:
+  - env::native-clang
 
 depends:
   - libs::afl-bin

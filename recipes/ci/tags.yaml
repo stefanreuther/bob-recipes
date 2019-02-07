@@ -1,3 +1,10 @@
+#
+#  Tagfile CI build
+#
+#  All XXX-tags targets should be listed in 'depends'.
+#  Produces a list of tagfiles, each in a directory XXX.
+#
+
 root: true
 
 inherit:

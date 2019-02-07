@@ -1,8 +1,8 @@
-# Environment: gcc native build
+# Environment: gcc 32-bit build
 
 environment:
-  CC: gcc
-  CXX: g++
+  CC: gcc -m32
+  CXX: g++ -m32
   CFLAGS: -O2 -W -Wall
   CXXFLAGS: -O2 -W -Wall
   LDFLAGS: ""
@@ -10,8 +10,8 @@ environment:
   CROSS_COMPILE: ""
   TARGET: POSIX
 
-  HOSTCC: gcc
-  HOSTCXX: g++
+  HOSTCC: gcc -m32
+  HOSTCXX: g++ -m32
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""

@@ -1,0 +1,15 @@
+#
+#  MinGW32 CI build
+#
+
+root: true
+
+inherit:
+  - env::mingw32
+
+depends:
+  - planets::maketurn-bin
+  - libs::afl-bin
+
+buildScript: "true"
+packageScript: "true"

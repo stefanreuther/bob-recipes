@@ -1,9 +1,3 @@
-#
-#  MinGW32 build
-#
-
-root: true
-
 environment:
   CC: i686-w64-mingw32-gcc
   CXX: i686-w64-mingw32-g++
@@ -19,10 +13,3 @@ environment:
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""
-
-depends:
-  - planets::maketurn-bin
-  - libs::afl-bin
-
-buildScript: "true"
-packageScript: "true"
