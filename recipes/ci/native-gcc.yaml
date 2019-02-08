@@ -23,7 +23,6 @@ depends:
   - planets::pcc2-bin
   - planets::pdk-bin
   - planets::peng-bin
-  - planets::website-daily-bin
   - server::lighttpd-bin
   - server::redis-bin
   - tools::bdiff-bin

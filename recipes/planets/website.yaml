@@ -8,24 +8,58 @@ checkoutSCM:
   module: c2web
 
 multiPackage:
+  #
+  #  website-daily-bin: daily build for publishing on planetscentral.com
+  #
   daily-bin:
     depends:
-      - tools::jstool-bin
+      - tools::jstool-host
       - planets::cc2res-bin
       - planets::js-pcc-bin
+      - planets::js-c2web-bin
 
     buildScript: |
       TODAY=$(date +%Y%m%d)
-      OUTPUT=$PWD
       rm -rf *
-      cd $1
       perl $1/install.pl \
            -DLIB_VERSION=".$TODAY" \
-           -DUSER_VERSION=".$TODAY-T" \
-           --output="$OUTPUT" \
+           -DC2W_VERSION=".$TODAY" \
+           -DUSER_VERSION="$TODAY-T" \
+           --cgi="$1" \
+           --output="." \
            --assets="${BOB_DEP_PATHS[planets::cc2res-bin]}/web" \
            --scripts="${BOB_DEP_PATHS[planets::js-pcc-bin]}" \
-           --jsmin="${BOB_DEP_PATHS[tools::jstool-bin]}/jsmin"
+           --c2web="${BOB_DEP_PATHS[planets::js-c2web-bin]}" \
+           --jsmin="${BOB_DEP_PATHS[tools::jstool-host]}/jsmin"
+
+    packageScript: |
+      shallowCopy "$1" .
+
+  #
+  #  website-dev: developer version for local use
+  #
+  #  Use as "bob dev --destination ..../public_html/..." to install in local webspace.
+  #
+  dev:
+    depends:
+      - tools::jstool-host
+      - planets::cc2res-bin
+      - planets::js-pcc-bin
+      - planets::js-c2web-bin
+
+    buildVars: [WEBSITE_CONFIG]
+
+    buildScript: |
+      OUTPUT=$PWD
+      rm -rf *
+      perl $1/install.pl \
+           --cgi="$1" \
+           --output="." \
+           --assets="${BOB_DEP_PATHS[planets::cc2res-bin]}/web" \
+           --scripts="${BOB_DEP_PATHS[planets::js-pcc-bin]}" \
+           --c2web="${BOB_DEP_PATHS[planets::js-c2web-bin]}" \
+           --jsmin="${BOB_DEP_PATHS[tools::jstool-host]}/jsmin" \
+           -DC2CONFIG="${WEBSITE_CONFIG:-/home/stefan/src/c2devconfig/c2config.txt}"
 
     packageScript: |
       shallowCopy "$1" .

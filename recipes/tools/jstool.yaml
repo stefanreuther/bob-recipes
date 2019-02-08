@@ -25,3 +25,11 @@ multiPackage:
       for i in jsmin jsmin0 cssmin; do
         cp "$1/jstool/$i" .
       done
+
+  host:
+    inherit: ["env::host"]
+    depends: ["tools::jstool-bin"]
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[tools::jstool-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .

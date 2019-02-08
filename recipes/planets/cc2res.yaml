@@ -10,12 +10,12 @@ checkoutSCM:
 multiPackage:
   bin:
     depends:
-      - tools::stargen-bin
+      - tools::stargen-host
       - tools::buildsys
 
     # Note: parallel build does not (yet) work
     buildScript: |
-      perl ${BOB_DEP_PATHS[tools::buildsys]}/Make.pl IN=$1 RESULT=result OUT=. STARGEN=${BOB_DEP_PATHS[tools::stargen-bin]}/stargen
+      perl ${BOB_DEP_PATHS[tools::buildsys]}/Make.pl IN=$1 RESULT=result OUT=. STARGEN=${BOB_DEP_PATHS[tools::stargen-host]}/stargen
       make install
 
     packageScript: |

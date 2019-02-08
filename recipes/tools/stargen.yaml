@@ -16,3 +16,13 @@ multiPackage:
       for i in stargen stargeni; do
         cp "$1/$i" .
       done
+
+  host:
+    inherit:
+      - env::host
+    depends:
+      - tools::stargen-bin
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[tools::stargen-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .
