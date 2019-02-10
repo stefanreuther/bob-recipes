@@ -9,7 +9,7 @@ checkoutSCM:
 
 multiPackage:
   #
-  #  website-daily-bin: daily build for publishing on planetscentral.com
+  #  website-daily-bin: daily build for publishing on http://planetscentral.com/test/
   #
   daily-bin:
     depends:

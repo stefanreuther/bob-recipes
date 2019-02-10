@@ -2,3 +2,4 @@ environment:
   CVSROOT: /home/stefan/cvsroot
   CVSROOT2: /dos/e/repo/cvs
   GITROOT: /dos/e/repo/git
+  REPO_ROOT: /home/stefan/src/ci/repo

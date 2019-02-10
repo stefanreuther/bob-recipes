@@ -10,13 +10,9 @@ inherit:
 depends:
   - libs::afl-bin
   - libs::afl-cov
-  - libs::afl-host
   - planets::c2ng-bin
-  - planets::c2ng-host
   - planets::cc2res-bin
   - planets::cmlimit-bin
-  - planets::js-pcc-bin
-  - planets::js-c2web-bin
   - planets::lisp-bin
   - planets::maketurn-bin
   - planets::mfq-bin

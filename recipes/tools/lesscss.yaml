@@ -14,3 +14,10 @@ multiPackage:
 
     packageScript: |
       shallowCopy "$1" .
+
+  host:
+    buildScript: |
+      shallowCopy "$1" .
+
+    packageScript: |
+      shallowCopy "$1" .

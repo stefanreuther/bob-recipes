@@ -1,0 +1,23 @@
+# Toolchain for i386
+# An archived gcc-3.3/Debian 3.0 toolchain to maximize portability of the generated binaries.
+# Added tools: git, bash5
+inherit:
+  - copy
+
+buildVars:
+  - REPO_ROOT
+
+buildScript: |
+  tar xzf "$REPO_ROOT"/gcc-3.3-root-bash5.tar.gz
+
+packageScript: |
+  shallowCopy "$1" .
+
+provideSandbox:
+  paths: ["/bin", "/usr/bin"]
+  mount:
+    - "/dev"
+    - ["${CVSROOT}", "${CVSROOT}", [rw]]        # Must be read-write because cvs writes lock files.
+    - ["${CVSROOT2}", "${CVSROOT2}", [rw]]      # Must be read-write because cvs writes lock files.
+    - "${GITROOT}"
+    - "${REPO_ROOT}"

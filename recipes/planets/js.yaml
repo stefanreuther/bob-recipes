@@ -1,4 +1,7 @@
-# js
+#
+#  JavaScript projects
+#
+
 inherit:
   - copy
 
@@ -9,26 +12,28 @@ checkoutSCM:
 
 multiPackage:
   pcc-bin:
+    # js-pcc-bin: PlanetsCentral.com JavaScript
     inherit: [make]
     depends:
       - tools::buildsys
-      - tools::lesscss-bin
+      - tools::lesscss-host
 
     buildScript: |
-      perl "$2"/Make.pl IN="$1/projects/pcc" OUT="out" LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-bin]}/node_modules/less/bin/lessc -su=on --clean-css"
-      doMake
+      perl "$2"/Make.pl IN="$1/projects/pcc" OUT="out" LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-host]}/node_modules/less/bin/lessc -su=on --clean-css"
+      doMake all-pcc
 
     packageScript: |
       shallowCopy "$1"/out .
 
   c2web-bin:
+    # js-c2web-bin: PCC2 Web JavaScript
     inherit: [make]
     depends:
       - tools::buildsys
-      - tools::lesscss-bin
+      - tools::lesscss-host
 
     buildScript: |
-      perl "$2"/Make.pl IN="$1/projects/c2web" OUT="out" LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-bin]}/node_modules/less/bin/lessc -su=on --clean-css"
+      perl "$2"/Make.pl IN="$1/projects/c2web" OUT="out" LESSC="nodejs ${BOB_DEP_PATHS[tools::lesscss-host]}/node_modules/less/bin/lessc -su=on --clean-css"
       doMake all-c2web
 
     packageScript: |

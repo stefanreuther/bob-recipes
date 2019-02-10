@@ -11,35 +11,18 @@ checkoutSCM:
     module: pdk
 
 multiPackage:
+  # Regular binary for target architecture
   bin:
-    # FIXME: port to buildsys
     inherit: [make]
     buildScript: |
       perl "$2"/Make.pl IN="$1" OUT="." CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}"
       doMake
-      doMake install
+      doMake install-bin
 
     packageScript: |
       shallowCopy "$1"/result .
 
-#   # PDK i386 (sandbox build for consumption by other sandbox builds)
-#   i386:
-#     root: true
-#     depends:
-#       - toolchain-i386
-#       - name: uchroot
-#         use: [tools]
-#     buildTools: [uchroot]
-#
-#     buildScript: |
-#       deepCopy "$1" .
-#       uchroot -R/="${BOB_DEP_PATHS[toolchain-i386]}" -W/dev=/dev -W/tmp=/tmp -W/home=. -DLC_ALL=C -C/home make -j4 all CC=gcc-3.3
-#
-#     packageScript: |
-#       for i in phostpdk.h version.h libpdk.a sendmess crack ptscore killrace pmaster pally; do
-#         cp "$1/$i" .
-#       done
-
+  # Documentation
   doc:
     inherit: [make]
     buildScript: |

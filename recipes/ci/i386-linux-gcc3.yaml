@@ -1,0 +1,18 @@
+#
+#  i386-Linux CI build
+#
+
+root: true
+
+
+inherit:
+  - env::i386-linux-gcc3
+
+depends:
+  - planets::maketurn-bin
+  - planets::pdk-bin
+  - planets::pcc2-bin
+  - planets::pcc2-pkg
+
+buildScript: "true"
+packageScript: "true"

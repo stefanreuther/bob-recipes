@@ -5,8 +5,6 @@ inherit:
 
 depends:
   - libs::cxxtest
-#   - name: uchroot
-#     use: [tools]
 
 checkoutVars: [CVSROOT]
 checkoutSCM:
@@ -25,7 +23,7 @@ multiPackage:
     depends:
       - planets::pdk-bin
     buildVars: [RUN]
-    buildScript: |
+    buildScript: &build |
       # Fetch and set up source
       deepCopy "$1" .
       cd pcc-v2
@@ -38,7 +36,22 @@ multiPackage:
       ${RUN} ./testsuite
 
     packageScript: |
-      make -C "$1"/pcc-v2 prefix="$PWD" INSTALL_FLAGS=-O install
+      make -C "$1"/pcc-v2 prefix="$PWD" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
+      rm -f install.log
+
+  # Package
+  pkg:
+    depends:
+      - planets::pdk-bin
+    buildVars: [RUN]
+    buildScript: *build
+    packageScript: |
+      # Original code:
+      #    make -C "$1"/pcc-v2 prefix="$PWD" deb
+      # Since 'make deb' only works in-place, we reproduce the package building here:
+      make -C "$1"/pcc-v2 prefix="$PWD/packaging/usr/local" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
+      perl "$1"/pcc-v2/scripts/install.pl -O -d -m 644 -R"$1/pcc-v2/debian" "$PWD/packaging/DEBIAN"
+      dpkg-deb -b packaging .
 
 #   # Coverage
 #   cov:
@@ -66,37 +79,7 @@ multiPackage:
 #     packageScript: |
 #       shallowCopy "$1/pcc-v2/coverage_report" .
 #
-#   # PCC2 for i386 (Debian package built with gcc-3.3 toolchain from Debian 3.0 for maximum compatibility)
-#   i386:
-#     root: true
-#     depends:
-#       - toolchain-i386
-#       - planets::pdk-i386
-#     buildTools: [uchroot]
-#     buildScript: |
-#       # Jail function
-#       jail() {
-#         uchroot -R/="${BOB_DEP_PATHS[toolchain-i386]}" -W/dev=/dev -W/tmp=/tmp -W/home=. \
-#             -R/home/cxxtest="${BOB_DEP_PATHS[cxxtest]}" \
-#             -R/home/pdk="${BOB_DEP_PATHS[planets::pdk-i386]}" \
-#             -DLC_ALL=C -C/home/pcc-v2 "$@"
-#       }
-#
-#       # Fetch and set up source
-#       deepCopy "$1" .
-#       ln -sf ../cpluslib pcc-v2/cpluslib
-#       mkdir cxxtest
-#       mkdir pdk
-#
-#       # Build in jail
-#       jail ./configure CC=gcc-3.3 --disable-inplace --with-pdk=/home/pdk
-#       jail make -j4
-#       jail make CXXTESTDIR=/home/cxxtest testsuite
-#       jail ./testsuite
-#       jail --root make deb
-#     packageScript: |
-#       cp "$1"/pcc-v2/pcc2_*.deb .
-#
+
 #   # PCC2 doc. This is a subset of any binary distribution.
 #   doc:
 #     root: true

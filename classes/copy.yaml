@@ -16,7 +16,7 @@ buildScript: &theScript |
   deepCopy() {
     # mkdir -p "$2"
     # cp -fa "$1"/. "$2"/
-    rsync -a --exclude=.git --exclude=CVS --exclude=.svn "$1"/ "$2"/
+    rsync -a -H --exclude=.git --exclude=CVS --exclude=.svn "$1"/ "$2"/
   }
 
 packageScript: *theScript

@@ -23,6 +23,13 @@ multiPackage:
     packageScript: |
       cp $1/uchroot .
 
+  host:
+    inherit: ['env::host']
+    depends: ['tools::uchroot-bin']
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[tools::uchroot-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .
     provideTools:
       uchroot: .
 
