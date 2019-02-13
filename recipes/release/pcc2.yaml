@@ -1,0 +1,22 @@
+#
+#  PCC2 Release
+#
+
+root: true
+
+inherit:
+  - copy
+
+multiPackage:
+  linux:
+    environment:
+      PCC2_REV: release_2_0_5
+      # FIXME: no tag for PCC2!
+    inherit:
+      - env::i386-linux-gcc3
+    depends:
+      - planets::pcc2-pkg
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[planets::pcc2-pkg]}" .
+    packageScript: |
+      shallowCopy "$1" .

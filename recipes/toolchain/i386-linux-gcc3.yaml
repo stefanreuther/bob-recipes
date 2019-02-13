@@ -17,6 +17,7 @@ provideSandbox:
   paths: ["/bin", "/usr/bin"]
   mount:
     - "/dev"
+    - "/proc"
     - ["${CVSROOT}", "${CVSROOT}", [rw]]        # Must be read-write because cvs writes lock files.
     - ["${CVSROOT2}", "${CVSROOT2}", [rw]]      # Must be read-write because cvs writes lock files.
     - "${GITROOT}"

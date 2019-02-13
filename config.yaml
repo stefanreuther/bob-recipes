@@ -2,3 +2,4 @@ policies:
   cleanEnvironment: true
   relativeIncludes: true
   allRelocatable: true
+  offlineBuild: true

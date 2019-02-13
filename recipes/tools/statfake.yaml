@@ -1,0 +1,33 @@
+# statfake (all files owned by root)
+
+checkoutSCM:
+  - scm: git
+    url: ${GITROOT}/root
+    dir: .
+
+multiPackage:
+  bin:
+    inherit:
+      - make
+
+    buildScript: |
+      doMakeDefault -C "$1" DESTDIR="$PWD"
+
+    packageScript: |
+      cp "$1"/statfake.so .
+      cp "$1"/statfake .
+
+  host:
+    inherit:
+      - env::host
+      - copy
+
+    depends:
+      - tools::statfake-bin
+
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[tools::statfake-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .
+    provideTools:
+      statfake: .

@@ -27,6 +27,7 @@ depends:
   - tools::tputuner-bin
   - tools::uchroot-bin
   - tools::vsmake-bin
+  - tools::statfake-bin
 
 buildScript: "true"
 packageScript: "true"

@@ -12,10 +12,12 @@ checkoutSCM:
     cvsroot: ${CVSROOT}
     module: cpluslib
     dir: cpluslib
+    rev: ${CPLUSLIB_REV:-HEAD}
   - scm: cvs
     cvsroot: ${CVSROOT}
     module: pcc-v2
     dir: pcc-v2
+    rev: ${PCC2_REV:-HEAD}
 
 multiPackage:
   # Binary
@@ -43,15 +45,20 @@ multiPackage:
   pkg:
     depends:
       - planets::pdk-bin
+      - name: tools::statfake-host
+        use: [tools]
     buildVars: [RUN]
     buildScript: *build
+    packageTools:
+      - statfake
     packageScript: |
       # Original code:
       #    make -C "$1"/pcc-v2 prefix="$PWD" deb
       # Since 'make deb' only works in-place, we reproduce the package building here:
       make -C "$1"/pcc-v2 prefix="$PWD/packaging/usr/local" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
       perl "$1"/pcc-v2/scripts/install.pl -O -d -m 644 -R"$1/pcc-v2/debian" "$PWD/packaging/DEBIAN"
-      dpkg-deb -b packaging .
+      statfake dpkg-deb -b packaging .
+      rm -rf install.log packaging
 
 #   # Coverage
 #   cov:
