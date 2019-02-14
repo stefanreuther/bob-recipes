@@ -1,0 +1,32 @@
+# Toolchain for amd64
+# An archived gcc-4.9/Debian 8.1 toolchain
+inherit:
+  - copy
+
+buildVars:
+  - REPO_ROOT
+
+buildScript: |
+  tar xzf "$REPO_ROOT"/gcc-4.9-root.tar.gz
+  rmdir home || true
+  rmdir tmp  || true
+  ( echo root:x:0:0:root:/root:/bin/bash; echo nobody:x:65534:65534:nobody:/root:/bin/bash ) >etc/passwd
+  ( echo 127.0.0.1 localhost ) >etc/hosts
+  ln -s mawk usr/bin/awk
+  rmdir usr/lib/x86_64-linux-gnu/perl/5.20
+  ln -s 5.20.2 usr/lib/x86_64-linux-gnu/perl/5.20
+  rmdir usr/share/perl/5.20
+  ln -s 5.20.2 usr/share/perl/5.20
+
+packageScript: |
+  shallowCopy "$1" .
+
+provideSandbox:
+  paths: ["/bin", "/usr/bin"]
+  mount:
+    - "/dev"
+    - "/proc"
+    - ["${CVSROOT}", "${CVSROOT}", [rw]]        # Must be read-write because cvs writes lock files.
+    - ["${CVSROOT2}", "${CVSROOT2}", [rw]]      # Must be read-write because cvs writes lock files.
+    - "${GITROOT}"
+    - "${REPO_ROOT}"

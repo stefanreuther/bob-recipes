@@ -1,0 +1,58 @@
+#
+#  PHost
+#
+
+checkoutVars: [CVSROOT]
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: phost
+    rev: ${PHOST_REV:-HEAD}
+
+multiPackage:
+  bin:
+    inherit:
+      - make
+      - copy
+      - buildsys
+    buildVars:
+      - PHOST3_VERSION
+      - PHOST4_VERSION
+      - PHOST_TARGET
+
+    # buildsys is a recent invention and most releases do not have it.
+    # By forcing the relevant files for buildsys migration to come from HEAD,
+    # we can build older releases from bob.
+    checkoutVars: [PHOST_FORCE_BUILDSYS]
+    checkoutScript: |
+      if test -n "${PHOST_FORCE_BUILDSYS:-}"; then
+        cvs up -A Rules.pl scripts/strlang.pl
+      fi
+
+    buildScript: |
+      doGenerate IN="$1" PHOST4_VERSION="${PHOST4_VERSION:-3}" PHOST3_VERSION="${PHOST3_VERSION:-3}" TARGET="${PHOST_TARGET:-unknown}"
+      doMake dist
+
+    packageScript: |
+      shallowCopy "$1"/result/archive .
+
+  # Documentation. Not yet ported to buildsys.
+  doc:
+    inherit:
+      - make
+      - copy
+    buildVars:
+      - PHOST3_VERSION
+      - PHOST4_VERSION
+
+    buildScript: |
+      deepCopy "$1" .
+      make -C doc dist
+      make -C doc4 dist
+      make -C doc4 LANG=de dist
+
+    packageScript: |
+      cp "$1"/doc/pdocs.zip phost-${PHOST3_VERSION:-3}-doc.zip
+      cp "$1"/doc4/pdocs4.zip phost-${PHOST4_VERSION:-4}-doc.zip
+      cp "$1"/doc4/pdocs4de.zip phost-${PHOST4_VERSION:-4}-doc-de.zip
+

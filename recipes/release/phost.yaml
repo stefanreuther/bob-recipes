@@ -1,0 +1,28 @@
+#
+#  PHost releases
+#
+
+root: true
+
+multiPackage:
+  "4.1h":
+    environment:
+      PHOST_REV: phost_4_1h
+      PHOST3_VERSION: '3.5h'
+      PHOST4_VERSION: '4.1h'
+      PHOST_FORCE_BUILDSYS: 'yes'
+    multiPackage:
+      linux-x64:
+        inherit:
+          - env::native-gcc
+        environment:
+          PHOST_TARGET: linux-x64
+
+inherit:
+  - copy
+depends:
+  - planets::phost-bin
+buildScript: |
+  shallowCopy "${BOB_DEP_PATHS[planets::phost-bin]}" .
+packageScript: |
+  shallowCopy "$1" .

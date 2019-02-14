@@ -1,0 +1,18 @@
+#
+#  amd64 Linux CI build
+#
+
+root: true
+
+
+inherit:
+  - env::amd64-linux-gcc49
+
+depends:
+  - libs::afl-bin
+  - planets::maketurn-bin
+  - planets::pdk-bin
+#  - planets::pcc2-bin  <- 20190214: missing SDL
+
+buildScript: "true"
+packageScript: "true"

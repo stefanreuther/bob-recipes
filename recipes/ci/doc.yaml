@@ -9,6 +9,7 @@ inherit:
 
 depends:
   - planets::pdk-doc
+  - planets::phost-doc
 
 buildScript: |
   # Usage: copyDoc package_name [path_in_package]
@@ -20,6 +21,7 @@ buildScript: |
   }
 
   copyDoc planets::pdk-doc
+  copyDoc planets::phost-doc
 
 packageScript: |
   shallowCopy "$1" .

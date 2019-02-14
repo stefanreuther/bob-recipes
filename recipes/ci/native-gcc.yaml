@@ -19,15 +19,16 @@ depends:
   - planets::pcc2-bin
   - planets::pdk-bin
   - planets::peng-bin
+  - planets::phost-bin
   - server::lighttpd-bin
   - server::redis-bin
   - tools::bdiff-bin
   - tools::jstool-bin
   - tools::stargen-bin
+  - tools::statfake-bin
   - tools::tputuner-bin
   - tools::uchroot-bin
   - tools::vsmake-bin
-  - tools::statfake-bin
 
 buildScript: "true"
 packageScript: "true"
