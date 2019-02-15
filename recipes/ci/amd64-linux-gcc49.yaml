@@ -13,6 +13,7 @@ depends:
   - planets::maketurn-bin
   - planets::pdk-bin
 #  - planets::pcc2-bin  <- 20190214: missing SDL
+  - server::lighttpd-bin
 
 buildScript: "true"
 packageScript: "true"

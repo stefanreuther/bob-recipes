@@ -1,0 +1,30 @@
+inherit:
+  - make
+  - copy
+
+checkoutSCM:
+  - scm: url
+    url: ${REPO_ROOT}/pcre-8.42.tar.bz2
+    digestSHA1: df0d1c2ff04c359220cb902539a6e134af4497f4
+    stripComponents: 1
+
+multiPackage:
+  bin:
+    buildScript: |
+      $1/configure --prefix=/opt/pcre --disable-shared CC="${CC}" CFLAGS="${CFLAGS} -fPIC"
+      doMake
+
+    packageScript: |
+      rewrite() {
+        sed "s,^prefix=/,prefix=$PWD/," <"$1" >"$1.new"
+        test -x "$1" && chmod +x "$1.new"
+        mv "$1.new" "$1"
+      }
+
+      make -C $1 prefix=$PWD/opt/pcre install
+      for i in opt/pcre/lib/pkgconfig/*.pc opt/pcre/bin/pcre-config; do
+        rewrite "$i"
+      done
+
+    provideTools:
+      pcre-config: opt/pcre/bin
