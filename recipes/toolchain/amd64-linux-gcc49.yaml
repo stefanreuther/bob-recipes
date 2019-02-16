@@ -1,22 +1,42 @@
 # Toolchain for amd64
-# An archived gcc-4.9/Debian 8.1 toolchain
+# Built from Debian packages (Debian 8.1)
+# Produces a ~200M sandbox
 inherit:
   - copy
 
 buildVars:
   - REPO_ROOT
 
+depends:
+  - tools::depacker
+
 buildScript: |
-  tar xzf "$REPO_ROOT"/gcc-4.9-root.tar.gz
-  rmdir home || true
-  rmdir tmp  || true
-  ( echo root:x:0:0:root:/root:/bin/bash; echo nobody:x:65534:65534:nobody:/root:/bin/bash ) >etc/passwd
-  ( echo 127.0.0.1 localhost ) >etc/hosts
-  ln -s mawk usr/bin/awk
-  rmdir usr/lib/x86_64-linux-gnu/perl/5.20
-  ln -s 5.20.2 usr/lib/x86_64-linux-gnu/perl/5.20
-  rmdir usr/share/perl/5.20
-  ln -s 5.20.2 usr/share/perl/5.20
+  # Install packages
+  packages=(
+     mawk                     # provides awk which is a virtual package required by others
+     gcc-4.9 g++-4.9
+     bash perl perl-base
+     make
+     sed coreutils findutils grep diffutils
+     zlib1g-dev
+     dpkg tar gzip bzip2
+     cvs git
+     rsync                    # required by 'copy' class
+     file                     # required by some configure scripts to figure out the object file format
+     libc-bin                 # provides ldconfig
+  )
+  perl "${BOB_DEP_PATHS[tools::depacker]}/depacker.pl" --list-file="${REPO_ROOT}/amd64-linux-gcc49/*.deb" --install=. ${packages[@]}
+
+  # Bob doesn't want us to have these:
+  rm -rf home
+  rm -rf tmp
+
+  # Save space
+  rm -rf usr/share/common-licenses
+  rm -rf usr/share/man
+  rm -rf usr/share/doc
+  rm -rf usr/share/doc-base
+  rm -rf usr/share/locale
 
 packageScript: |
   shallowCopy "$1" .

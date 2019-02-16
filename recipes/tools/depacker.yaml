@@ -1,0 +1,18 @@
+
+
+inherit:
+  - copy
+
+checkoutSCM:
+  - scm: git
+    url: ${GITROOT}/depacker
+    dir: .
+
+buildScript: |
+  shallowCopy "$1" .
+
+packageScript: |
+  deepCopy "$1" .
+
+provideTools:
+  depacker: .
