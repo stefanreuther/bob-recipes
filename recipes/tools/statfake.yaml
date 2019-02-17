@@ -14,8 +14,9 @@ multiPackage:
       doMakeDefault -C "$1" DESTDIR="$PWD"
 
     packageScript: |
-      cp "$1"/statfake.so .
-      cp "$1"/statfake .
+      mkdir -p bin lib
+      cp "$1"/statfake.so lib
+      cp "$1"/statfake bin
 
   host:
     inherit:
@@ -30,4 +31,4 @@ multiPackage:
     packageScript: |
       shallowCopy "$1" .
     provideTools:
-      statfake: .
+      statfake: bin

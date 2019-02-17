@@ -9,17 +9,17 @@ checkoutSCM:
 
 multiPackage:
   bin:
-    inherit: [make]
+    inherit: [make, buildsys]
     depends:
       - libs::afl-bin
-      - tools::buildsys
     buildScript: |
-      perl "${BOB_DEP_PATHS[tools::buildsys]}/Make.pl" IN="$1" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
+      doGenerate IN="$1" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
       doMake
       doMake install
 
     packageScript: |
-      shallowCopy "$1/result" .
+      mkdir -p bin
+      shallowCopy "$1/result" bin/
 
   host:
     inherit: ["env::host"]
@@ -28,3 +28,5 @@ multiPackage:
       shallowCopy "${BOB_DEP_PATHS[tools::jstool-bin]}" .
     packageScript: |
       shallowCopy "$1" .
+    provideTools:
+      jstool: bin

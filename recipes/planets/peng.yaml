@@ -12,9 +12,24 @@ multiPackage:
     inherit: [make]
     buildScript: |
       deepCopy "$1" .
-      doMake all dist
+      doMake all
 
     packageScript: |
-      for i in peng.zip README.html README peng; do
-        cp "$1"/$i .
-      done
+      mkdir -p bin
+      cp "$1"/peng bin
+
+  doc:
+    inherit: [make]
+    buildScript: |
+      deepCopy "$1" .
+      doMake README
+
+    packageScript: |
+      cp "$1"/README "$1"/README.html .
+
+  src:
+    buildScript: |
+      make -C "$1" DISTNAME="$PWD/peng.zip" dist
+
+    packageScript: |
+      shallowCopy "$1" .

@@ -1,5 +1,6 @@
-# Environment: gcc 32-bit build
-
+#
+#  Environment: Native gcc 32-bit
+#
 environment:
   CC: gcc -m32
   CXX: g++ -m32

@@ -11,8 +11,8 @@ checkoutSCM:
   module: js
 
 multiPackage:
-  pcc-bin:
-    # js-pcc-bin: PlanetsCentral.com JavaScript
+  pcc-dat:
+    # js-pcc-dat: PlanetsCentral.com JavaScript
     inherit: [make]
     depends:
       - tools::buildsys
@@ -25,8 +25,8 @@ multiPackage:
     packageScript: |
       shallowCopy "$1"/out .
 
-  c2web-bin:
-    # js-c2web-bin: PCC2 Web JavaScript
+  c2web-dat:
+    # js-c2web-dat: PCC2 Web JavaScript
     inherit: [make]
     depends:
       - tools::buildsys

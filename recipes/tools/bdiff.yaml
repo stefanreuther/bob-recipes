@@ -12,6 +12,7 @@ environment:
   TARBALL: bdiff.tar.gz
 
 multiPackage:
+  # Binary package for target
   bin:
     inherit: [make]
 
@@ -20,11 +21,23 @@ multiPackage:
       doMakeDefault
 
     packageScript: |
-      cp $1/bdiff $1/bpatch .
+      mkdir -p bin
+      cp $1/bdiff $1/bpatch bin/
+
+  # Host tool
+  host:
+    inherit: ["env::host"]
+    depends: ["tools::bdiff-bin"]
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[tools::bdiff-bin]}" .
+
+    packageScript: |
+      shallowCopy "$1" .
 
     provideTools:
-      bdiff: .
+      bdiff: bin
 
+  # Source tarball
   src:
     buildVars: [TARBALL]
     buildScript: |
@@ -35,3 +48,11 @@ multiPackage:
     packageVars: [TARBALL]
     packageScript: |
       cp $1/${TARBALL} .
+
+  # Documentation
+  doc:
+    buildScript: |
+      cp "$1"/*.1 .
+
+    packageScript: |
+      shallowCopy "$1" .

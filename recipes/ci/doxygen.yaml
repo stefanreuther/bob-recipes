@@ -1,8 +1,12 @@
+#
+#  Doxygen CI build
+#
+
 root: true
 
 inherit: [copy]
 
-depends:
+environment:
   HOSTCC: gcc
   HOSTCXX: g++
   HOSTCFLAGS: -O2 -W -Wall

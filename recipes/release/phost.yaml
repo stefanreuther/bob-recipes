@@ -21,8 +21,8 @@ multiPackage:
 inherit:
   - copy
 depends:
-  - planets::phost-bin
+  - planets::phost-pkg
 buildScript: |
-  shallowCopy "${BOB_DEP_PATHS[planets::phost-bin]}" .
+  shallowCopy "${BOB_DEP_PATHS[planets::phost-pkg]}" .
 packageScript: |
   shallowCopy "$1" .

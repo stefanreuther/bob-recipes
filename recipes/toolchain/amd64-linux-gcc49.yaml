@@ -1,6 +1,11 @@
 # Toolchain for amd64
 # Built from Debian packages (Debian 8.1)
 # Produces a ~200M sandbox
+#
+# Original package repository created from original Debian CD using:
+#  cp $(perl depacker.pl --ignore-package=liblucene4-java --list-file=/media/cdrom/dists/jessie/main/binary-amd64/Packages.gz \
+#    mawk gcc-4.9 g++-4.9 bash perl perl-base make sed coreutils findutils grep diffutils zlib1g-dev dpkg tar gzip cvs git rsync bzip2 file libc-bin \
+#    --show-attr=filename --filename-root=/media/cdrom) repo/amd64-linux-gcc49/
 inherit:
   - copy
 

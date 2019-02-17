@@ -1,4 +1,6 @@
-# Environment for i386 Linux (with sandbox)
+#
+#  Environment: AMD64, i386, 3.3, sandbox (Debian 3)
+#
 environment:
   CC: gcc-3.3
   CXX: g++-3.3

@@ -1,9 +1,6 @@
 inherit:
   - copy
 
-depends:
-  - tools::buildsys
-
 checkoutVars: [CVSROOT]
 checkoutSCM:
   - scm: cvs
@@ -13,9 +10,9 @@ checkoutSCM:
 multiPackage:
   # Regular binary for target architecture
   bin:
-    inherit: [make]
+    inherit: [make, buildsys]
     buildScript: |
-      perl "$2"/Make.pl IN="$1" OUT="." CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}"
+      doGenerate IN="$1"
       doMake
       doMake install-bin
 
@@ -24,7 +21,7 @@ multiPackage:
 
   # Documentation
   doc:
-    inherit: [make]
+    inherit: [make, buildsys]
     buildScript: |
       perl "$2"/Make.pl IN="$1"
       doMake install-doc

@@ -1,5 +1,6 @@
-# Environment: native clang build
-
+#
+#  Environment: Native clang
+#
 environment:
   CC: clang
   CXX: clang++

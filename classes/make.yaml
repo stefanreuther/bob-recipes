@@ -1,4 +1,6 @@
-# Make invocation.
+#
+#  Make invocation.
+#
 
 buildVars: [CC, CXX, CFLAGS, CXXFLAGS, LDFLAGS, TARGET, CROSS_COMPILE, RUN]
 buildVarsWeak: [NPROC]

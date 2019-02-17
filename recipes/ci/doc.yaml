@@ -9,19 +9,26 @@ inherit:
 
 depends:
   - planets::pdk-doc
+  - planets::mfq-doc
+  - planets::peng-doc
+  - planets::lisp-doc
   - planets::phost-doc
+  - planets::maketurn-doc
+  - tools::bdiff-doc
 
 buildScript: |
   # Usage: copyDoc package_name [path_in_package]
   copyDoc() {
     package=$1
     dest=${1//::/\/}
+    dest=${dest%-doc}
     mkdir -p "$dest"
     shallowCopy "${BOB_DEP_PATHS[$package]}/${2:-.}" "$dest"
   }
 
-  copyDoc planets::pdk-doc
-  copyDoc planets::phost-doc
+  for i in "${!BOB_DEP_PATHS[@]}"; do
+    copyDoc "$i"
+  done
 
 packageScript: |
   shallowCopy "$1" .

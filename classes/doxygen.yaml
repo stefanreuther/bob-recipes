@@ -1,6 +1,14 @@
+#
+#  Doxygen
+#
+
 inherit: [copy]
 
 # Invoke 'buildDoxygen $1', where $1 points to the source code folder (which contains the module's Doxyfile)
+# Produces
+#   out/          Doxygen result (i.e. out/html/ and so on)
+#   Warnings      Warnings for manual inspection
+#   out/Tagfile   Tagfile
 buildScript: |
   buildDoxygen() {
     # Determine tagfiles

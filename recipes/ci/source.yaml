@@ -1,0 +1,24 @@
+#
+#  All source documentation targets
+#
+
+root: true
+
+inherit:
+  - copy
+
+depends:
+  - planets::cmlimit-src
+  - planets::mfq-src
+  - planets::peng-src
+  - tools::bdiff-src
+  - tools::uchroot-src
+  - tools::vsmake-src
+
+buildScript: |
+  for i in "${BOB_DEP_PATHS[@]}"; do
+    cp "$i"/* .
+  done
+
+packageScript: |
+  shallowCopy "$1" .

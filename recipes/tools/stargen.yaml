@@ -13,8 +13,9 @@ multiPackage:
       doMakeDefault
 
     packageScript: |
+      mkdir -p bin
       for i in stargen stargeni; do
-        cp "$1/$i" .
+        cp "$1/$i" bin
       done
 
   host:
@@ -26,3 +27,5 @@ multiPackage:
       shallowCopy "${BOB_DEP_PATHS[tools::stargen-bin]}" .
     packageScript: |
       shallowCopy "$1" .
+    provideTools:
+      stargen: bin

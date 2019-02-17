@@ -12,3 +12,6 @@ multiPackage:
     buildScript: |
       doMakeDefault VPATH="$1" -f "$1/Makefile"
 
+    packageScript: |
+      mkdir -p bin
+      cp "$1"/tputuner bin/

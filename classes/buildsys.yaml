@@ -1,15 +1,16 @@
-
+#
+#  Build using tools::buildsys
+#
 buildVars: [CC, CXX, CFLAGS, CXXFLAGS, LDFLAGS, CROSS_COMPILE, RUN]
 buildVarsWeak: [NPROC]
 
 depends:
   - tools::buildsys
 
+# Use 'doGenerate PARM=VALUE...' to generate the Makefile.
+# This passes along the compiler environment.
+# You need to provide IN, OUT, TARGET, and additional per-target configuration (e.g. CXXTESTDIR).
 buildScript: |
   doGenerate() {
-    # Parameters to supply from caller:
-    #   IN
-    #   OUT
-    #   per-target configuration e.g. PHOST3_VERSION, CXXTESTDIR
-    perl "${BOB_DEP_PATHS[tools::buildsys]}/Make.pl" CROSS_COMPILE="${CROSS_COMPILE=}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" RUN="${RUN:-}" "$@"
+    perl "${BOB_DEP_PATHS[tools::buildsys]}/Make.pl" CROSS_COMPILE="${CROSS_COMPILE:-}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" RUN="${RUN:-}" "$@"
   }

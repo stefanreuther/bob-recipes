@@ -15,9 +15,10 @@ environment:
   HOSTLDFLAGS: ""
 
 depends:
-  - planets::js-pcc-bin
-  - planets::js-c2web-bin
-  - planets::website-daily-bin
+  - planets::js-pcc-dat
+  - planets::js-c2web-dat
+  - planets::cc2res-dat
+  - planets::website-daily-dat
   - planets::website-dev
 
 buildScript: "true"

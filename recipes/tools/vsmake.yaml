@@ -11,27 +11,25 @@ checkoutSCM:
 environment:
   TARBALL: vsmake.tar.gz
 
-depends:
-  - tools::buildsys
-
 multiPackage:
   bin:
-    inherit: [make]
+    inherit: [make, buildsys]
 
     buildScript: |
-      #shallowCopy "$1" .
-      #doMakeDefault
-      perl "$2"/Make.pl IN="$1" OUT="." CXX="${CC}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}"
+      doGenerate IN="$1"
       doMake
 
     packageScript: |
-      cp $1/vsmake $1/vsmake.txt .
+      mkdir -p bin
+      cp $1/vsmake bin/
 
     provideTools:
-      vsmake: .
+      vsmake: bin
 
   src:
     buildVars: [TARBALL]
+
+    # Copy and pack, because copying will lose SCM administrative files
     buildScript: |
       shallowCopy "$1" .
       rm -f ${TARBALL}

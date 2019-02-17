@@ -1,4 +1,4 @@
-
+# depacker (Debian package unpacker)
 
 inherit:
   - copy
@@ -12,7 +12,7 @@ buildScript: |
   shallowCopy "$1" .
 
 packageScript: |
-  deepCopy "$1" .
+  shallowCopy "$1" .
 
 provideTools:
   depacker: .

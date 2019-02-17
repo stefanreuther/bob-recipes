@@ -13,11 +13,29 @@ multiPackage:
     inherit: [make]
     depends:
       - planets::pdk-bin
+
+    # Do not use doMakeDefault here; that would prevent mfq from setting its own CFLAGS
     buildScript: |
       deepCopy "$1" .
       doMake CC="${CC}" PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/legacy dist
 
     packageScript: |
-      for i in mfq.zip mfq.html mfq; do
-        cp "$1"/$i .
-      done
+      mkdir -p bin
+      cp "$1"/mfq bin
+
+  doc:
+    buildScript: |
+      cp "$1"/mfq.html .
+
+    packageScript: |
+      shallowCopy "$1" .
+
+  src:
+    # As given, the Makefile makes 'dist' (=source code distribution) depend on 'mfq', which is the compiled binary.
+    # 'CC=echo' is a hack to prevent it from doing that.
+    buildScript: |
+      deepCopy "$1" .
+      make CC=echo dist
+
+    packageScript: |
+      cp "$1"/mfq.zip .

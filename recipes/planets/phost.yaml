@@ -10,7 +10,7 @@ checkoutSCM:
     rev: ${PHOST_REV:-HEAD}
 
 multiPackage:
-  bin:
+  pkg:
     inherit:
       - make
       - copy
@@ -30,7 +30,7 @@ multiPackage:
       fi
 
     buildScript: |
-      doGenerate IN="$1" PHOST4_VERSION="${PHOST4_VERSION:-3}" PHOST3_VERSION="${PHOST3_VERSION:-3}" TARGET="${PHOST_TARGET:-unknown}"
+      doGenerate IN="$1" PHOST4_VERSION="${PHOST4_VERSION:-4}" PHOST3_VERSION="${PHOST3_VERSION:-3}" TARGET="${PHOST_TARGET:-unknown}"
       doMake dist
 
     packageScript: |

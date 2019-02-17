@@ -21,7 +21,8 @@ multiPackage:
       doMakeDefault
 
     packageScript: |
-      cp $1/uchroot .
+      mkdir -p bin
+      cp $1/uchroot bin/
 
   host:
     inherit: ['env::host']
@@ -31,15 +32,15 @@ multiPackage:
     packageScript: |
       shallowCopy "$1" .
     provideTools:
-      uchroot: .
+      uchroot: bin
 
-#  src:
-#    buildVars: [TARBALL]
-#    buildScript: |
-#      shallowCopy "$1" .
-#      rm -f ${TARBALL}
-#      tar czf ${TARBALL} *
-#
-#    packageVars: [TARBALL]
-#    packageScript: |
-#      cp $1/${TARBALL} .
+  src:
+    buildVars: [TARBALL]
+    buildScript: |
+      shallowCopy "$1" .
+      rm -f ${TARBALL}
+      tar czf ${TARBALL} *
+
+    packageVars: [TARBALL]
+    packageScript: |
+      cp $1/${TARBALL} .

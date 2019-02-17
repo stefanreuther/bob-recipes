@@ -16,10 +16,19 @@ multiPackage:
     buildScript: |
       deepCopy "$1" .
       doMakeDefault PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/legacy
-      doMakeDefault ldoc.txt
       doMakeDefault test
 
     packageScript: |
-      for i in lispy vgaplisp ldoc.txt stdlib.ly; do
-        cp "$1"/$i .
+      mkdir -p bin
+      for i in lispy vgaplisp stdlib.ly; do
+        cp "$1"/$i bin
       done
+
+  doc:
+    inherit: [make]
+    buildScript: |
+      deepCopy "$1" .
+      doMake ldoc.txt
+
+    packageScript: |
+      cp "$1"/ldoc.txt .

@@ -16,15 +16,15 @@ multiPackage:
 
     packageScript: |
       rewrite() {
-        sed "s,^prefix=/,prefix=$PWD/," <"$1" >"$1.new"
+        sed "s,^prefix=/opt/pcre,prefix=$PWD," <"$1" >"$1.new"
         test -x "$1" && chmod +x "$1.new"
         mv "$1.new" "$1"
       }
 
-      make -C $1 prefix=$PWD/opt/pcre install
-      for i in opt/pcre/lib/pkgconfig/*.pc opt/pcre/bin/pcre-config; do
+      make -C $1 prefix=$PWD install
+      for i in lib/pkgconfig/*.pc bin/pcre-config; do
         rewrite "$i"
       done
 
     provideTools:
-      pcre-config: opt/pcre/bin
+      pcre-config: bin

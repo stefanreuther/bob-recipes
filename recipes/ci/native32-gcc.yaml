@@ -5,20 +5,17 @@
 root: true
 
 inherit:
-  - env::native-gcc32
+  - env::native32-gcc
 
 depends:
   - libs::afl-bin
-#   - planets::c2ng-bin
-#   - planets::cc2res-bin
+#  - planets::c2ng-bin <-- missing zlib
   - planets::cmlimit-bin
-#   - planets::js-pcc-bin
   - planets::lisp-bin
   - planets::maketurn-bin
   - planets::mfq-bin
   - planets::pdk-bin
   - planets::peng-bin
-#   - planets::website-daily-bin
   - tools::bdiff-bin
   - tools::jstool-bin
   - tools::stargen-bin

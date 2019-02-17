@@ -1,4 +1,7 @@
 # PCC2
+#
+# Note that this package is configured for /usr/local, not /opt/pcc2,
+# because most of the binary packages we released so far go there.
 inherit:
   - copy
   - make

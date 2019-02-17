@@ -4,7 +4,6 @@ inherit:
   - copy
 
 depends:
-  - tools::buildsys
   - libs::cxxtest
 
 checkoutVars: [CVSROOT]
@@ -16,9 +15,10 @@ checkoutSCM:
 multiPackage:
   # Regular binary package
   bin:
-    inherit: [make]
+    inherit: [make, buildsys]
+    buildVars: [TARGET]
     buildScript: |
-      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}"
+      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}"
       doMake
       doMake test
       doMake install
@@ -26,43 +26,17 @@ multiPackage:
     packageScript: |
       shallowCopy "$1/result" .
 
-  host:
-    depends:
-      - libs::afl-bin
-    environment:
-      CC: ${HOSTCC}
-      CXX: ${HOSTCXX}
-      CFLAGS: ${HOSTCFLAGS}
-      CXXFLAGS: ${HOSTCXXFLAGS}
-      LDFLAGS: ${HOSTLDFLAGS}
-      CROSS_COMPILE: ""
-      TARGET: "POSIX"
-      RUN: ""
-    buildScript: |
-      shallowCopy "${BOB_DEP_PATHS[libs::afl-bin]}" .
-    packageScript: |
-      shallowCopy "$1" .
-
   # Coverage report
-  cov:
-    inherit: [make]
-# #     inherit: [coverage]
-    buildScript: |
-      # Build with coverage enabled
-      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}" --with-coverage
-      doMake
-# #       # Initialize
-# #       coverage_init
-# #
-# #       # Run tests (generates *.gcda)
-# #       ./testsuite
-# #
-# #       # Create coverage
-# #       coverage_create afl "$PWD/afl/*" "$PWD/config/*" "$PWD/arch/*"
-# #
-    packageScript: |
-      true
-# #       shallowCopy "$1/coverage_report" .
+  # # FIXME: incomplete
+  # cov:
+  #   inherit: [make, buildsys]
+  #   buildScript: |
+  #     # Build with coverage enabled
+  #     doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" --with-coverage
+  #     doMake
+  #
+  #   packageScript: |
+  #     true
 
   # Documentation
   doxy:
@@ -73,7 +47,11 @@ multiPackage:
     packageScript: |
       packageDoxygen "$1"
 
+  # Tags
   tags:
+    # This is architecture-less and thus must NOT depend on CC, CFLAGS, etc.
+    depends:
+      - tools::buildsys
     buildScript: |
       perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}"
       make tags

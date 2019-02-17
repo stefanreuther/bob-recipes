@@ -9,10 +9,8 @@ inherit:
 
 depends:
   - libs::afl-bin
-  - libs::afl-cov
   - libs::pcre8-bin
   - planets::c2ng-bin
-  - planets::cc2res-bin
   - planets::cmlimit-bin
   - planets::lisp-bin
   - planets::maketurn-bin
@@ -20,7 +18,7 @@ depends:
   - planets::pcc2-bin
   - planets::pdk-bin
   - planets::peng-bin
-  - planets::phost-bin
+  - planets::phost-pkg          # package, not bin!
   - server::lighttpd-bin
   - server::redis-bin
   - tools::bdiff-bin

@@ -1,5 +1,6 @@
-# Environment: gcc native build
-
+#
+#  Environment: Native gcc build
+#
 environment:
   CC: gcc
   CXX: g++

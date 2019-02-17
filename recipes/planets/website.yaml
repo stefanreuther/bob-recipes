@@ -9,14 +9,17 @@ checkoutSCM:
 
 multiPackage:
   #
-  #  website-daily-bin: daily build for publishing on http://planetscentral.com/test/
+  #  website-daily-dat: daily build for publishing on http://planetscentral.com/test/
   #
-  daily-bin:
+  daily-dat:
     depends:
-      - tools::jstool-host
-      - planets::cc2res-bin
-      - planets::js-pcc-bin
-      - planets::js-c2web-bin
+      - name: tools::jstool-host
+        use: [tools]
+      - planets::cc2res-dat
+      - planets::js-pcc-dat
+      - planets::js-c2web-dat
+
+    buildTools: [jstool]
 
     buildScript: |
       TODAY=$(date +%Y%m%d)
@@ -27,10 +30,10 @@ multiPackage:
            -DUSER_VERSION="$TODAY-T" \
            --cgi="$1" \
            --output="." \
-           --assets="${BOB_DEP_PATHS[planets::cc2res-bin]}/web" \
-           --scripts="${BOB_DEP_PATHS[planets::js-pcc-bin]}" \
-           --c2web="${BOB_DEP_PATHS[planets::js-c2web-bin]}" \
-           --jsmin="${BOB_DEP_PATHS[tools::jstool-host]}/jsmin"
+           --assets="${BOB_DEP_PATHS[planets::cc2res-dat]}/web" \
+           --scripts="${BOB_DEP_PATHS[planets::js-pcc-dat]}" \
+           --c2web="${BOB_DEP_PATHS[planets::js-c2web-dat]}" \
+           --jsmin=jsmin
 
     packageScript: |
       shallowCopy "$1" .
@@ -42,10 +45,13 @@ multiPackage:
   #
   dev:
     depends:
-      - tools::jstool-host
-      - planets::cc2res-bin
-      - planets::js-pcc-bin
-      - planets::js-c2web-bin
+      - name: tools::jstool-host
+        use: [tools]
+      - planets::cc2res-dat
+      - planets::js-pcc-dat
+      - planets::js-c2web-dat
+
+    buildTools: [jstool]
 
     buildVars: [WEBSITE_CONFIG]
 
@@ -55,10 +61,10 @@ multiPackage:
       perl $1/install.pl \
            --cgi="$1" \
            --output="." \
-           --assets="${BOB_DEP_PATHS[planets::cc2res-bin]}/web" \
-           --scripts="${BOB_DEP_PATHS[planets::js-pcc-bin]}" \
-           --c2web="${BOB_DEP_PATHS[planets::js-c2web-bin]}" \
-           --jsmin="${BOB_DEP_PATHS[tools::jstool-host]}/jsmin" \
+           --assets="${BOB_DEP_PATHS[planets::cc2res-dat]}/web" \
+           --scripts="${BOB_DEP_PATHS[planets::js-pcc-dat]}" \
+           --c2web="${BOB_DEP_PATHS[planets::js-c2web-dat]}" \
+           --jsmin=jsmin \
            -DC2CONFIG="${WEBSITE_CONFIG:-/home/stefan/src/c2devconfig/c2config.txt}"
 
     packageScript: |

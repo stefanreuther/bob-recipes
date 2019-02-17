@@ -4,7 +4,6 @@ inherit:
   - copy
 
 depends:
-  - tools::buildsys
   - libs::cxxtest
 
 checkoutVars: [CVSROOT]
@@ -15,12 +14,12 @@ checkoutSCM:
 
 multiPackage:
   bin:
-    inherit: [make]
+    inherit: [make, buildsys]
     depends:
       - libs::afl-bin
 
     buildScript: |
-      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" TARGET="${TARGET:-POSIX}" RUN="${RUN:-}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
+      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
       doMake
       doMake test
       doMake install
