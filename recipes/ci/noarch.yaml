@@ -20,6 +20,7 @@ depends:
   - planets::cc2res-dat
   - planets::website-daily-dat
   - planets::website-dev
+  - planets::c2systest
 
 buildScript: "true"
 packageScript: "true"

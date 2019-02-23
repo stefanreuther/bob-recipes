@@ -1,0 +1,27 @@
+
+
+
+checkoutSCM:
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: c2systest
+    dir: c2systest
+  - scm: cvs
+    cvsroot: ${CVSROOT}
+    module: planetscentral-programs
+    dir: pcc-programs
+
+depends:
+  - libs::afl-host
+  - planets::c2ng-host
+  - planets::website-daily-dat
+
+buildScript: |
+  cd "$1/c2systest"
+  perl test.pl -Dc2ng="${BOB_DEP_PATHS[planets::c2ng-host]}/bin" \
+               -Dafl="${BOB_DEP_PATHS[libs::afl-host]}/bin" \
+               -Dc2web="${BOB_DEP_PATHS[planets::website-daily-dat]}" \
+               -Dprograms=../pcc-programs
+
+packageScript: |
+  true

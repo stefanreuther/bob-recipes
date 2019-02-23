@@ -26,6 +26,17 @@ multiPackage:
     packageScript: |
       shallowCopy "$1/result" .
 
+
+  host:
+    inherit:
+      - env::host
+    depends:
+      - libs::afl-bin
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[libs::afl-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .
+
   # Coverage report
   # # FIXME: incomplete
   # cov:
@@ -53,7 +64,7 @@ multiPackage:
     depends:
       - tools::buildsys
     buildScript: |
-      perl "$2"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}"
+      perl "${BOB_DEP_PATHS[tools::buildsys]}"/Make.pl IN="$1" OUT="." CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}"
       make tags
 
     packageScript: |
