@@ -1,0 +1,52 @@
+inherit:
+  - make
+  - copy
+
+checkoutSCM:
+  - scm: url
+    url: ${REPO_ROOT}/openssl-1.1.1a.tar.gz
+    digestSHA1: 8fae27b4f34445a5500c9dc50ae66b4d6472ce29
+    stripComponents: 1
+
+multiPackage:
+  bin:
+    buildScript: |
+      # FIXME: --with-zlib?
+      opts=(
+         # Pass target macros
+         --cross-compile-prefix="${CROSS_COMPILE}"
+         CC="${CC}"
+         CXX="${CXX}"
+         CFLAGS="${CFLAGS} -w"
+         CXXFLAGS="${CXXFLAGS} -w"
+         LDFLAGS="${LDFLAGS}"
+
+         --openssldir=/opt/openssl/etc/ssl
+         --prefix=/opt/openssl
+
+         no-filenames
+
+         # No dependencies. This will attempt to write into the build directory during packaging.
+         no-makedepend
+      )
+      $1/config "${opts[@]}"
+      doMake
+
+    packageScript: |
+      rewrite() {
+        sed "s,^prefix=/opt/pcre,prefix=$PWD," <"$1" >"$1.new"
+        test -x "$1" && chmod +x "$1.new"
+        mv "$1.new" "$1"
+      }
+
+      make -C $1 INSTALLTOP=$PWD OPENSSLDIR=$PWD/etc/ssl install_sw
+      for i in lib/pkgconfig/*.pc; do
+        rewrite "$i"
+      done
+
+  doc:
+    buildScript: |
+      $1/config
+
+    packageScript: |
+      make -C $1 INSTALLTOP=$PWD OPENSSLDIR=$PWD/etc/ssl install_docs

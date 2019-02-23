@@ -15,6 +15,7 @@ depends:
   - planets::phost-doc
   - planets::maketurn-doc
   - tools::bdiff-doc
+  - libs::openssl-doc
 
 buildScript: |
   # Usage: copyDoc package_name [path_in_package]

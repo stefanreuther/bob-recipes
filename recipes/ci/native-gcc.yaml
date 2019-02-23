@@ -10,6 +10,7 @@ inherit:
 depends:
   - libs::afl-bin
   - libs::pcre8-bin
+  - libs::openssl-bin
   - planets::c2ng-bin
   - planets::cmlimit-bin
   - planets::lisp-bin
