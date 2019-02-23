@@ -28,7 +28,7 @@ buildScript: |
     html="${html}<li><a href=\"$dirname/index.html\">$i</a></li>"
   done
   for i in "${!BOB_DEP_PATHS[@]}"; do
-    mkdir "${map[$i]}"
+    mkdir -p "${map[$i]}"
     for f in "${BOB_DEP_PATHS[$i]}"/html/*; do
       if test -f "$f"; then
         sed "$sedprog" <"$f" >"${map[$i]}/${f##*/}"

@@ -3,3 +3,7 @@ policies:
   relativeIncludes: true
   allRelocatable: true
   offlineBuild: true
+  secureSSL: true
+  mergeEnvironment: true
+  sandboxInvariant: true
+  tidyUrlScm: true
