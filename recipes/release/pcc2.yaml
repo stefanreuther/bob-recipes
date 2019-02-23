@@ -9,9 +9,6 @@ inherit:
 
 multiPackage:
   linux:
-    environment:
-      PCC2_REV: release_2_0_5
-      # FIXME: no tag for PCC2!
     inherit:
       - env::i386-linux-gcc3
     depends:
@@ -20,3 +17,12 @@ multiPackage:
       shallowCopy "${BOB_DEP_PATHS[planets::pcc2-pkg]}" .
     packageScript: |
       shallowCopy "$1" .
+    multiPackage:
+      2.0.5:
+        environment:
+          PCC2_REV: release_2_0_5
+          # FIXME: no tag for cpluslib
+      2.0.6:
+        environment:
+          PCC2_REV: release_2_0_6
+          CPLUSLIB_REV: pcc_2_0_6
