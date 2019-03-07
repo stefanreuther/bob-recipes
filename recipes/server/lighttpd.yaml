@@ -25,3 +25,27 @@ multiPackage:
 
     packageScript: |
       shallowCopy "$1/result" .
+
+  ssl-bin:
+    inherit: [make, copy]
+
+    depends:
+      - name: libs::pcre8-bin
+        use: [tools, result]
+      - libs::openssl-bin
+
+    provideDeps:
+      - libs::openssl-bin
+
+    buildTools: [pcre-config]
+
+    # lighttpd creates a "versionstamp" file in the source directory,
+    # so we cannot use a clean out-of-tree build here
+    buildScript: |
+      deepCopy "$1" .
+      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}" --with-openssl="${BOB_DEP_PATHS[libs::openssl-bin]}"
+      doMake
+      doMake install prefix="$PWD/result"
+
+    packageScript: |
+      shallowCopy "$1/result" .

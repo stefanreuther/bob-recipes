@@ -24,6 +24,7 @@ multiPackage:
          --openssldir=/opt/openssl/etc/ssl
          --prefix=/opt/openssl
 
+         #no-shared
          no-filenames
 
          # No dependencies. This will attempt to write into the build directory during packaging.
@@ -34,7 +35,7 @@ multiPackage:
 
     packageScript: |
       rewrite() {
-        sed "s,^prefix=/opt/pcre,prefix=$PWD," <"$1" >"$1.new"
+        sed "s,^prefix=/opt/openssl,prefix=$PWD," <"$1" >"$1.new"
         test -x "$1" && chmod +x "$1.new"
         mv "$1.new" "$1"
       }
