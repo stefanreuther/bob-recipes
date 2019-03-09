@@ -13,7 +13,7 @@ multiPackage:
     depends:
       - libs::afl-bin
     buildScript: |
-      doGenerate IN="$1" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
+      doGenerate IN="$1" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}/opt/afl"
       doMake
       doMake install
 

@@ -12,4 +12,4 @@ multiPackage:
       shallowCopy "$1" .
       doMake PREFIX=/opt/redis
     packageScript: |
-      make -C "$1" PREFIX=$PWD install
+      make -C "$1" PREFIX=$PWD/opt/redis install

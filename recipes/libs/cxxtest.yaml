@@ -1,5 +1,9 @@
-# CxxTest
-# This is a header-only library so we only need to pass information from checkout to build to package.
+#
+#  CxxTest
+#
+#  This is a header-only library so we only need to pass information from checkout to build to package.
+#  Use module path as "-I" or as path for tools.
+#
 
 inherit:
   - copy

@@ -1,4 +1,3 @@
-
 checkoutVars: [CVSROOT]
 checkoutSCM:
   - scm: cvs
@@ -21,7 +20,7 @@ multiPackage:
       deepCopy "$1" .
       ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}"
       doMake
-      doMake install prefix="$PWD/result"
+      doMake install DESTDIR="$PWD/result"
 
     packageScript: |
       shallowCopy "$1/result" .
@@ -43,9 +42,9 @@ multiPackage:
     # so we cannot use a clean out-of-tree build here
     buildScript: |
       deepCopy "$1" .
-      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}" --with-openssl="${BOB_DEP_PATHS[libs::openssl-bin]}"
+      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS} -Wl,-rpath,/opt/openssl/lib" --with-openssl="${BOB_DEP_PATHS[libs::openssl-bin]}/opt/openssl"
       doMake
-      doMake install prefix="$PWD/result"
+      doMake install DESTDIR="$PWD/result"
 
     packageScript: |
       shallowCopy "$1/result" .

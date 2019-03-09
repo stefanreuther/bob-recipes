@@ -9,26 +9,22 @@ multiPackage:
   bin:
     inherit:
       - make
-
     buildScript: |
       doMakeDefault -C "$1" DESTDIR="$PWD"
-
     packageScript: |
-      mkdir -p bin lib
-      cp "$1"/statfake.so lib
-      cp "$1"/statfake bin
+      mkdir -p opt/statfake/bin opt/statfake/lib
+      cp "$1"/statfake.so opt/statfake/lib
+      cp "$1"/statfake opt/statfake/bin
 
   host:
     inherit:
       - env::host
       - copy
-
     depends:
       - tools::statfake-bin
-
     buildScript: |
       shallowCopy "${BOB_DEP_PATHS[tools::statfake-bin]}" .
     packageScript: |
       shallowCopy "$1" .
     provideTools:
-      statfake: bin
+      statfake: opt/statfake/bin

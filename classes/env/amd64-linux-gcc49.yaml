@@ -21,3 +21,5 @@ depends:
   - name: toolchain::amd64-linux-gcc49
     forward: true
     use: [sandbox]
+  - if: $(not,$(is-sandbox-enabled))
+    depends: ["Environment amd64-linux-gcc49 usable with sandbox enabled"]

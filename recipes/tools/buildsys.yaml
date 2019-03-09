@@ -14,5 +14,7 @@ buildScript: |
 
 packageScript: |
   shallowCopy $1 .
+  chmod +x Make.pl
 
-
+provideTools:
+  buildsys: .

@@ -1,0 +1,18 @@
+root: true
+
+multiPackage:
+  bin:
+    inherit:
+      - env::amd64-linux-gcc49
+      - copy
+    depends:
+      - server::lighttpd-ssl-bin
+      - server::redis-bin
+      - libs::openssl-bin
+      - planets::c2ng-bin
+    buildScript: |
+      for i in server::lighttpd-ssl-bin server::redis-bin libs::openssl-bin planets::c2ng-bin; do
+        shallowCopy "${BOB_DEP_PATHS[$i]}" .
+      done
+    packageScript: |
+      shallowCopy "$1" .

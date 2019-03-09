@@ -1,3 +1,14 @@
+#
+#  OpenSSL
+#
+#  - creates /opt/openssl/{lib,bin,...}
+#  - creates shared libraries (static libraries require that we sneak a '-lpthread'
+#    into every user of the static library)
+#
+
+metaEnvironment:
+  prefix: "/opt/openssl"
+
 inherit:
   - make
   - copy
@@ -24,10 +35,9 @@ multiPackage:
          --openssldir=/opt/openssl/etc/ssl
          --prefix=/opt/openssl
 
-         #no-shared
          no-filenames
 
-         # No dependencies. This will attempt to write into the build directory during packaging.
+         # No dependencies. This would attempt to write into the build directory during packaging.
          no-makedepend
       )
       $1/config "${opts[@]}"
@@ -35,13 +45,13 @@ multiPackage:
 
     packageScript: |
       rewrite() {
-        sed "s,^prefix=/opt/openssl,prefix=$PWD," <"$1" >"$1.new"
+        sed "s,^prefix=/,prefix=$PWD/," <"$1" >"$1.new"
         test -x "$1" && chmod +x "$1.new"
         mv "$1.new" "$1"
       }
 
-      make -C $1 INSTALLTOP=$PWD OPENSSLDIR=$PWD/etc/ssl install_sw
-      for i in lib/pkgconfig/*.pc; do
+      make -C $1 DESTDIR=$PWD install_sw
+      for i in opt/openssl/lib/pkgconfig/*.pc; do
         rewrite "$i"
       done
 
@@ -50,4 +60,4 @@ multiPackage:
       $1/config
 
     packageScript: |
-      make -C $1 INSTALLTOP=$PWD OPENSSLDIR=$PWD/etc/ssl install_docs
+      make -C $1 DESTDIR=$PWD install_docs

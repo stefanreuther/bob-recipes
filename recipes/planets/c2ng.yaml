@@ -19,11 +19,14 @@ multiPackage:
       - libs::afl-bin
 
     buildScript: |
-      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}"
+      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}/opt/afl" prefix=/opt/c2ng
       doMake
       doMake test
-      doMake install
+      doMake install DESTDIR=result
 
+    # FIXME: right now we need to keep the shallowCopy installation.
+    # The 'make -C $1 DESTDIR=$PWD install' version does not work because the Makefile depends on afl/config.mk,
+    # which is not available in the sandbox.
     packageScript: |
       shallowCopy "$1"/result .
 
