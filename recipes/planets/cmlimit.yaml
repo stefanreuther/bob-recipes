@@ -16,7 +16,7 @@ multiPackage:
     # Do not use doMakeDefault here; that would prevent cmlimit from setting its own CFLAGS
     buildScript: |
       deepCopy "$1" .
-      doMake CC="${CC}" PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/legacy dist
+      doMake CC="${CC}" PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/opt/pdk/legacy dist
 
     packageScript: |
       mkdir -p bin

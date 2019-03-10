@@ -35,13 +35,13 @@ multiPackage:
       ln -sf ../cpluslib
 
       # Build
-      ./configure --with-pdk=${BOB_DEP_PATHS[planets::pdk-bin]}
+      ./configure --with-pdk=${BOB_DEP_PATHS[planets::pdk-bin]}/opt/pdk/legacy
       doMake
       doMake CXXTESTDIR=${BOB_DEP_PATHS[libs::cxxtest]} testsuite
       ${RUN} ./testsuite
 
     packageScript: |
-      make -C "$1"/pcc-v2 prefix="$PWD" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
+      make -C "$1"/pcc-v2 prefix="$PWD/usr/local" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
       rm -f install.log
 
   # Package

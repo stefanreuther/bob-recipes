@@ -18,8 +18,8 @@ depends:
 
 buildScript: |
   cd "$1/c2systest"
-  perl test.pl -Dc2ng="${BOB_DEP_PATHS[planets::c2ng-host]}/bin" \
-               -Dafl="${BOB_DEP_PATHS[libs::afl-host]}/bin" \
+  perl test.pl -Dc2ng="${BOB_DEP_PATHS[planets::c2ng-host]}/opt/c2ng/bin" \
+               -Dafl="${BOB_DEP_PATHS[libs::afl-host]}/opt/afl/bin" \
                -Dc2web="${BOB_DEP_PATHS[planets::website-daily-dat]}" \
                -Dprograms=../pcc-programs
 

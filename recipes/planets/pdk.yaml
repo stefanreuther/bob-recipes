@@ -12,18 +12,18 @@ multiPackage:
   bin:
     inherit: [make, buildsys]
     buildScript: |
-      doGenerate IN="$1"
+      doGenerate IN="$1" prefix="/opt/pdk"
       doMake
-      doMake install-bin
+      doMake rule_check
 
     packageScript: |
-      shallowCopy "$1"/result .
+      make -C "$1" DESTDIR="$PWD" install-bin
 
   # Documentation
   doc:
     inherit: [make, buildsys]
     buildScript: |
-      perl "$2"/Make.pl IN="$1"
+      perl "$2"/Make.pl IN="$1" prefix="result"
       doMake install-doc
 
     packageScript: |

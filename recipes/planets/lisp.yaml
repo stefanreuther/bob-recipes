@@ -15,7 +15,7 @@ multiPackage:
 
     buildScript: |
       deepCopy "$1" .
-      doMakeDefault PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/legacy
+      doMakeDefault PDK=${BOB_DEP_PATHS[planets::pdk-bin]}/opt/pdk/legacy
       doMakeDefault test
 
     packageScript: |
