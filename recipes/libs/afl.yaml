@@ -42,16 +42,16 @@ multiPackage:
       shallowCopy "$1" .
 
   # Coverage report
-  # # FIXME: incomplete
-  # cov:
-  #   inherit: [make, buildsys]
-  #   buildScript: |
-  #     # Build with coverage enabled
-  #     doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" --with-coverage
-  #     doMake
-  #
-  #   packageScript: |
-  #     true
+  cov:
+    inherit: [make, buildsys]
+    buildScript: |
+      # Build with coverage enabled
+      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" prefix=/opt/afl --enable-coverage
+      doMake rule_check
+      doMake coverage
+
+    packageScript: |
+      shallowCopy "$1"/coverage_report .
 
   # Documentation
   doxy:

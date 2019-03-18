@@ -39,3 +39,16 @@ multiPackage:
       shallowCopy "${BOB_DEP_PATHS[planets::c2ng-bin]}" .
     packageScript: |
       shallowCopy "$1" .
+
+  # Coverage report
+  cov:
+    inherit: [make, buildsys]
+    depends:
+      - libs::afl-bin
+    buildScript: |
+      # Build with coverage enabled
+      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}/opt/afl" prefix=/opt/c2ng --with-coverage
+      doMake coverage
+
+    packageScript: |
+      shallowCopy "$1"/coverage_report .

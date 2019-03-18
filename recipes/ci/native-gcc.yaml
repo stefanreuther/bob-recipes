@@ -9,9 +9,11 @@ inherit:
 
 depends:
   - libs::afl-bin
+  - libs::afl-cov
   - libs::pcre8-bin
   - libs::openssl-bin
   - planets::c2ng-bin
+  - planets::c2ng-cov
   - planets::cmlimit-bin
   - planets::lisp-bin
   - planets::maketurn-bin
