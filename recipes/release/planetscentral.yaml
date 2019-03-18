@@ -18,35 +18,46 @@ multiPackage:
       shallowCopy "$1" .
 
 
-# As of 20190310, this does not work; bob seems to pass the sandbox path to this recipe which runs outside the sandbox.
-#   # Test it: test the programs built using the sandbox vs.
-#   # FIXME: this duplicates the c2systest recipe - can we do better?
-#   # FIXME: use a website release
-#   # FIXME: where to get planetscentral-programs from?
-#   test:
-#     inherit:
-#       - env::native-gcc
-#     depends:
-#       - release::planetscentral-bin
-#       - planets::website-daily-dat
-#       - libs::afl-host
-#
-#     checkoutSCM:
-#       - scm: cvs
-#         cvsroot: ${CVSROOT}
-#         module: c2systest
-#         dir: c2systest
-#       - scm: cvs
-#         cvsroot: ${CVSROOT}
-#         module: planetscentral-programs
-#         dir: pcc-programs
-#
-#     buildScript: |
-#       cd "$1/c2systest"
-#       perl test.pl -Dc2ng="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/c2ng/bin" \
-#                    -Dafl="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/afl/bin" \
-#                    -Dc2web="${BOB_DEP_PATHS[planets::website-daily-dat]}" \
-#                    -Dprograms=../pcc-programs
-#
-#     packageScript: |
-#       true
+  # Test it: test the programs built using the sandbox
+  # FIXME: use a website release
+  # FIXME: where to get planetscentral-programs from?
+  test:
+    inherit:
+      - env::native-gcc
+    depends:
+      - release::planetscentral-bin
+      - planets::website-daily-dat
+      - libs::afl-host
+
+    checkoutSCM:
+      - scm: cvs
+        cvsroot: ${CVSROOT}
+        module: c2systest
+        dir: c2systest
+      - scm: cvs
+        cvsroot: ${CVSROOT}
+        module: planetscentral-programs
+        dir: pcc-programs
+
+    # Try to test against built redis-server, not respserver.
+    # This occasionally hangs when using redis-server; running it in an isolated environment (unshare) seems to help
+    # (and avoids that the CI process interferes with a parallel run), but not entirely fix it. Debug this later.
+    # buildScript: |
+    #   cd "$1/c2systest"
+    #   unshare -r -n perl test.pl -Dinitcommand='/sbin/ifconfig lo up' \
+    #                -Dc2ng="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/c2ng/bin" \
+    #                -Drespserver.path="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/redis/bin/redis-server" \
+    #                -Dc2web="${BOB_DEP_PATHS[planets::website-daily-dat]}" \
+    #                -Dprograms=../pcc-programs
+
+    # ...alternatively, just test against respserver.
+    buildScript: |
+      cd "$1/c2systest"
+      unshare -r -n perl test.pl -Dinitcommand='/sbin/ifconfig lo up' \
+                   -Dc2ng="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/c2ng/bin" \
+                   -Dafl="${BOB_DEP_PATHS[libs::afl-host]}/opt/afl/bin" \
+                   -Dc2web="${BOB_DEP_PATHS[planets::website-daily-dat]}" \
+                   -Dprograms=../pcc-programs
+
+    packageScript: |
+      true
