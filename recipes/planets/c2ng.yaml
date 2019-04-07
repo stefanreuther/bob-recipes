@@ -52,3 +52,17 @@ multiPackage:
 
     packageScript: |
       shallowCopy "$1"/coverage_report .
+
+  # Documentation
+  doc:
+    inherit:
+      - make
+      - buildsys
+      - env::native-gcc        # website-daily-dat needs an environment
+    depends:
+      - planets::website-daily-dat
+    buildScript: |
+      doGenerate IN="$1/doc" CGI="${BOB_DEP_PATHS[planets::website-daily-dat]}"
+      doMake
+    packageScript: |
+      make -C "$1" DESTDIR=$PWD install
