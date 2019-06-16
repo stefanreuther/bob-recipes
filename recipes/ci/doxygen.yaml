@@ -15,6 +15,7 @@ environment:
 
 depends:
   - libs::afl-doxy
+  - planets::c2ng-doxy
 
 buildScript: |
   declare -A map
@@ -24,7 +25,7 @@ buildScript: |
     dirname=${i%-doxy}
     dirname=${dirname##*::}
     map[$i]=$dirname
-    sedprog="${sedprog}s,TAGROOT::$i:,../$dirname,g;"
+    sedprog="${sedprog}s,TAGROOT::$i/,../$dirname/,g;"
     html="${html}<li><a href=\"$dirname/index.html\">$i</a></li>"
   done
   for i in "${!BOB_DEP_PATHS[@]}"; do

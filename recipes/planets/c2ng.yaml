@@ -66,3 +66,27 @@ multiPackage:
       doMake
     packageScript: |
       make -C "$1" DESTDIR=$PWD install
+
+  # Documentation
+  doxy:
+    depends:
+      - libs::afl-doxy
+    inherit: [doxygen]
+    buildScript: |
+      buildDoxygen "$1"
+
+    packageScript: |
+      packageDoxygen "$1"
+
+  # Tags
+  tags:
+    # This is architecture-less and thus must NOT depend on CC, CFLAGS, etc.
+    # Disable building because otherwise this would insist on a compiled version of afl.
+    depends:
+      - tools::buildsys
+    buildScript: |
+      perl "${BOB_DEP_PATHS[tools::buildsys]}"/Make.pl IN="$1" OUT="." ENABLE_BUILD=0
+      make tags
+
+    packageScript: |
+      cp "$1/TAGS" .

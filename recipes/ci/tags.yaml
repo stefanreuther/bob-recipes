@@ -12,6 +12,7 @@ inherit:
 
 depends:
   - libs::afl-tags
+  - planets::c2ng-tags
 
 buildScript: |
   for i in "${!BOB_DEP_PATHS[@]}"; do

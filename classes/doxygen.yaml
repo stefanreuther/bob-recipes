@@ -14,20 +14,19 @@ buildScript: |
     # Determine tagfiles
     tagfiles=""
     for i in "${!BOB_DEP_PATHS[@]}"; do
-      case "$i" in
-        *-doxy)
-          tagfiles="$tagfiles ${BOB_DEP_PATHS[$i]}/Tagfile=TAGROOT::$i:"
-          ;;
-      esac
+      if test -f "${BOB_DEP_PATHS[$i]}/Tagfile"; then
+        tagfiles="$tagfiles \"${BOB_DEP_PATHS[$i]}/Tagfile=TAGROOT::$i\""
+      fi
     done
 
     # Build configuration on-the-fly and run Doxygen
-      ( sed -e '/^ *OUTPUT_FILE *=/d;/^ *WARN_LOGFILE *=/d;/^ *GENERATE_TAGFILE *=/d;/^ *TAGFILES *=/d;' <"$1"/Doxyfile
-        echo "OUTPUT_DIRECTORY = $PWD/out"
-        echo "WARN_LOGFILE = $PWD/Warnings"
-        echo "GENERATE_TAGFILE = $PWD/out/Tagfile"
-        echo "TAGFILES = $tagfiles" ) |
-      ( cd "$1" && doxygen - )
+    ( sed -e '/^ *OUTPUT_FILE *=/d;/^ *WARN_LOGFILE *=/d;/^ *GENERATE_TAGFILE *=/d;/^ *TAGFILES *=/d;' <"$1"/Doxyfile
+      echo ""
+      echo "OUTPUT_DIRECTORY = $PWD/out"
+      echo "WARN_LOGFILE = $PWD/Warnings"
+      echo "GENERATE_TAGFILE = $PWD/out/Tagfile"
+      echo "TAGFILES = $tagfiles" ) |
+    ( cd "$1" && doxygen - )
   }
 
 # Invoke 'packageDoxygen $1' to publish.
