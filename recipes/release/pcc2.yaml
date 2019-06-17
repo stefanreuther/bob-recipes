@@ -26,3 +26,7 @@ multiPackage:
         environment:
           PCC2_REV: release_2_0_6
           CPLUSLIB_REV: pcc_2_0_6
+      2.0.7:
+        environment:
+          PCC2_REV: release_2_0_7
+          CPLUSLIB_REV: release_2_0_7
