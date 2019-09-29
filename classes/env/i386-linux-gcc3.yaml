@@ -1,5 +1,5 @@
 #
-#  Environment: AMD64, i386, 3.3, sandbox (Debian 3)
+#  Environment: i386, gcc-3.3, sandbox (Debian 3)
 #
 environment:
   CC: gcc-3.3
@@ -18,7 +18,7 @@ environment:
   HOSTLDFLAGS: ""
 
 depends:
-  - name: toolchain::i386-linux-gcc3
+  - name: toolchain::i386-linux
     forward: true
     use: [sandbox]
   - if: $(not,$(is-sandbox-enabled))

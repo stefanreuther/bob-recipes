@@ -1,0 +1,25 @@
+#
+#  Environment: i386, gcc-2.7, sandbox (Debian 3)
+#
+environment:
+  CC: /usr/i486-linuxlibc1/bin/gcc
+  CXX: /usr/i486-linuxlibc1/bin/g++
+  CFLAGS: -O2 -W -Wall -static
+  CXXFLAGS: -O2 -W -Wall -static
+  LDFLAGS: -static
+  RUN: ""
+  CROSS_COMPILE: ""
+  TARGET: POSIX
+
+  HOSTCC: /usr/i486-linuxlibc1/bin/gcc
+  HOSTCXX: /usr/i486-linuxlibc1/bin/g++
+  HOSTCFLAGS: -O2 -W -Wall -static
+  HOSTCXXFLAGS: -O2 -W -Wall -static
+  HOSTLDFLAGS: -static
+
+depends:
+  - name: toolchain::i386-linux
+    forward: true
+    use: [sandbox]
+  - if: $(not,$(is-sandbox-enabled))
+    depends: ["Environment i386-linux-gcc2-libc5 only usable with sandbox enabled"]

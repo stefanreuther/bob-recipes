@@ -19,6 +19,7 @@ multiPackage:
       - PHOST3_VERSION
       - PHOST4_VERSION
       - PHOST_TARGET
+      - HOSTCC
 
     # buildsys is a recent invention and most releases do not have it.
     # By forcing the relevant files for buildsys migration to come from HEAD,
@@ -30,7 +31,7 @@ multiPackage:
       fi
 
     buildScript: |
-      doGenerate IN="$1" PHOST4_VERSION="${PHOST4_VERSION:-4}" PHOST3_VERSION="${PHOST3_VERSION:-3}" TARGET="${PHOST_TARGET:-unknown}"
+      doGenerate IN="$1" PHOST4_VERSION="${PHOST4_VERSION:-4}" PHOST3_VERSION="${PHOST3_VERSION:-3}" PLATFORM="${PHOST_TARGET:-unknown}" HOSTCC=${HOSTCC}
       doMake dist
 
     packageScript: |

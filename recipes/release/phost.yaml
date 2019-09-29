@@ -17,11 +17,19 @@ multiPackage:
           - env::native-gcc
         environment:
           PHOST_TARGET: linux-x64
+        depends:
+          - planets::phost-pkg
+
+      linux-x86:
+        inherit:
+          - env::i386-linux-gcc2-libc5
+        environment:
+          PHOST_TARGET: linux-x86
+        depends:
+          - planets::phost-pkg
 
 inherit:
   - copy
-depends:
-  - planets::phost-pkg
 buildScript: |
   shallowCopy "${BOB_DEP_PATHS[planets::phost-pkg]}" .
 packageScript: |

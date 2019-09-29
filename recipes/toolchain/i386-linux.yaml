@@ -1,0 +1,106 @@
+# Toolchain for i386
+# This provides a gcc-3.3/libc6 and gcc-2.7/libc5 toolchain.
+# The packages have been archived from a (modified) Debian 3.0 distribution.
+# The point of this toolchain is to maximize portability of the generated binaries.
+#
+# Since Debian 3.0 predates git and bash4, we compile appropriate versions internally.
+# Since gcc-2.7 is too old to compile them, we need to use gcc-3.3, and a gcc-2.7-only toolchain cannot be made.
+#
+# The package archive has been created from original CDs.
+
+inherit:
+  - copy
+  - env::native-gcc
+
+buildVars:
+  - REPO_ROOT
+
+depends:
+  - tools::depacker
+  - name: tools::uchroot-host
+    use: [tools]
+
+environment:
+  BASH_SRC: ${REPO_ROOT}/bash-5.0.tar.gz
+  GIT_SRC: ${REPO_ROOT}/git-2.9.5.tar.gz
+
+buildTools:
+  - uchroot
+
+buildVars:
+  - BASH_SRC
+  - GIT_SRC
+  - REPO_ROOT
+
+buildScript: |
+  # Install packages into directory "sysroot"
+  packages=(
+     mawk                    # provides awk which is a virtual package required by others
+     gcc-3.3 g++-3.3
+     bash perl perl-base     # perl-base provides perlapi, required by libdigest-md5-perl
+     make
+     sed textutils shellutils findutils grep diff
+     zlib1g-dev
+     libsdl1.2-dev libsdl-image1.2-dev
+     dpkg tar gzip
+     libdigest-md5-perl
+     cvs rsync
+     altgcc libc5-altdev
+    )
+  rm -rf sysroot
+  mkdir sysroot
+  perl "${BOB_DEP_PATHS[tools::depacker]}/depacker.pl" --list-file="${REPO_ROOT}/i386-linux/*.deb" --install=sysroot ${packages[@]} --verbose
+
+  # Preliminary virtualisation
+  jail() {
+    uchroot -W/=sysroot -W/tmp=/tmp -W/dev=/dev -W/home=. "$@"
+  }
+
+  # This shouldn't be needed, but somehow is.
+  # It will not pick up /usr/X11R6/lib otherwise.
+  jail -C/ /sbin/ldconfig
+
+  # Install bash
+  mkdir -p bash-src
+  ( cd bash-src && tar xzf "$BASH_SRC" --strip-components=1 )
+
+  mkdir -p bash-build
+  jail -C/home/bash-build  ../bash-src/configure --prefix=/ --disable-alias --disable-coprocesses --disable-progcomp --disable-readline --disable-nls CC=gcc-3.3
+  jail -C/home/bash-build  make -j4
+  jail -C/home/bash-build  strip bash
+  cp bash-build/bash sysroot/bin/bash
+
+  # Install git
+  mkdir -p git
+  ( cd git && tar xzf "$GIT_SRC" --strip-components=1 )
+  for i in all strip install; do
+    jail -C/home/git -C/home/git make -j3 NO_OPENSSL=1 NO_CURL=1 NO_EXPAT=1 NO_GETTEXT=1 NO_SVN_TESTS=1 NO_PERL=1 NO_PYTHON=1 NO_TCLTK=1 NO_NSEC=1 HAVE_CLOCK_MONOTONIC= CC=gcc-3.3 prefix=/usr $i
+  done
+
+  # Install nproc fake
+  ( echo "#!/bin/sh"; echo "echo 2" ) >sysroot/bin/nproc
+  chmod a+x sysroot/bin/nproc
+
+  # Bob doesn't want us to have these:
+  rm -rf sysroot/home
+  rm -rf sysroot/tmp
+
+  # Save space
+  rm -rf sysroot/usr/share/common-licenses
+  rm -rf sysroot/usr/share/man
+  rm -rf sysroot/usr/share/doc
+  rm -rf sysroot/usr/share/doc-base
+  rm -rf sysroot/usr/share/locale
+
+packageScript: |
+  shallowCopy "$1/sysroot" .
+
+provideSandbox:
+  paths: ["/bin", "/usr/bin"]
+  mount:
+    - "/dev"
+    - "/proc"
+    - ["${CVSROOT}", "${CVSROOT}", [rw]]        # Must be read-write because cvs writes lock files.
+    - ["${CVSROOT2}", "${CVSROOT2}", [rw]]      # Must be read-write because cvs writes lock files.
+    - "${GITROOT}"
+    - "${REPO_ROOT}"
