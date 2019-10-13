@@ -22,9 +22,7 @@ if test -z "$BASH_VERSION"; then
 fi
 
 while true; do
-    # Wait for marker to appear
-    log 'Ready.'
-    while test \! -f $MARKER; do sleep 5; done
+    # Wait for marker to disappear
     log 'Got trigger, waiting for it to settle...'
 
     # Remove the marker and wait until it remains gone
@@ -76,4 +74,8 @@ while true; do
         fi
         rm -f $links
     ) | tee builds/$name.sum | sed "s/^/  /"
+
+    # Wait for next iteration
+    log 'Ready.'
+    while test \! -f $MARKER; do sleep 5; done
 done
