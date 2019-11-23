@@ -6,6 +6,7 @@ checkoutSCM:
   scm: cvs
   cvsroot: ${CVSROOT}
   module: c2web
+  rev: ${PLANETS_C2WEB_REV:-HEAD}
 
 multiPackage:
   #
@@ -66,6 +67,42 @@ multiPackage:
            --c2web="${BOB_DEP_PATHS[planets::js-c2web-dat]}" \
            --jsmin=jsmin \
            -DC2CONFIG="${WEBSITE_CONFIG:-/home/stefan/src/c2devconfig/c2config.txt}"
+
+    packageScript: |
+      shallowCopy "$1" .
+
+  #
+  #  website-release: release build from tagged versions
+  #
+  #  Provide
+  #    PLANETS_JS_REV           // should have the form pcc_<date>
+  #    PLANETS_C2WEB_REV        // should have the form pcc_<date>
+  #    PLANETS_CC2RES_REV
+  #
+  release:
+    depends:
+      - name: tools::jstool-host
+        use: [tools]
+      - planets::cc2res-dat
+      - planets::js-pcc-dat
+      - planets::js-c2web-dat
+
+    buildTools: [jstool]
+
+    buildVars: [PLANETS_JS_REV, PLANETS_C2WEB_REV]
+
+    buildScript: |
+      rm -rf *
+      perl $1/install.pl \
+           -DLIB_VERSION=".${PLANETS_JS_REV/pcc_}" \
+           -DC2W_VERSION=".${PLANETS_JS_REV/pcc_}" \
+           -DUSER_VERSION="${PLANETS_C2WEB_REV/pcc_}" \
+           --cgi="$1" \
+           --output="." \
+           --assets="${BOB_DEP_PATHS[planets::cc2res-dat]}/web" \
+           --scripts="${BOB_DEP_PATHS[planets::js-pcc-dat]}" \
+           --c2web="${BOB_DEP_PATHS[planets::js-c2web-dat]}" \
+           --jsmin=jsmin
 
     packageScript: |
       shallowCopy "$1" .

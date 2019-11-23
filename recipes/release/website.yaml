@@ -1,0 +1,22 @@
+#
+#  Website releases
+#
+
+root: true
+
+multiPackage:
+  "20191123":
+    environment:
+      PLANETS_JS_REV:       pcc_20191123
+      PLANETS_C2WEB_REV:    pcc_20191123
+      PLANETS_CC2RES_REV:   pcc_20191123
+    depends:
+      - planets::website-release
+
+inherit:
+  - copy
+  - env::native-gcc
+buildScript: |
+  shallowCopy "${BOB_DEP_PATHS[planets::website-release]}" "."
+packageScript: |
+  shallowCopy "$1" .

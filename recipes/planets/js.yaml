@@ -9,6 +9,7 @@ checkoutSCM:
   scm: cvs
   cvsroot: ${CVSROOT}
   module: js
+  rev: ${PLANETS_JS_REV:-HEAD}
 
 multiPackage:
   pcc-dat:
