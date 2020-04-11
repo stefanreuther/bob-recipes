@@ -9,6 +9,9 @@ inherit:
 
 depends:
   - planets::dos::pcc-main
+  - planets::dos::pcc-sim
+  - planets::dos::pcc-script
+  - planets::dos::pcc-ships
   - planets::dos::pcc-extra
 
 buildScript: |

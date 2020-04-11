@@ -1,6 +1,8 @@
 #
 #  PCC 1.x and derivatives
 #
+#  Pass in PCC_VERSION to get versioned zips for -sim, -script, -ships.
+#
 
 inherit:
   - copy
@@ -9,7 +11,17 @@ inherit:
 depends:
   - planets::dos::env
 
+# Common prefix
 buildScript: |
+  # Functions to set/reset compiler switches globally in switches.inc
+  flag_set() {
+    p=work/planets/cc
+    sed "s/{ *\\\$define $1 *}/{$2\$define $1}/i" <$p/switches.inc >$p/switches.tmp
+    mv $p/switches.tmp $p/switches.inc
+  }
+  flag_enable()  { flag_set "$1" '' ; }
+  flag_disable() { flag_set "$1" ' '; }
+
   shallowCopy "${BOB_DEP_PATHS[planets::dos::env]}" .
 
   # Environment
@@ -20,6 +32,9 @@ buildScript: |
   dos_setenv base '\work'
   dos_setenv path '%base%\bp7\bin;%base%\djgpp\bin;%base%\tools;%base%\vsmake;%path%'
   dos_setenv djgpp '%base%\djgpp\djgpp.env'
+
+  mkdir -p work/planets/cc/zips
+  rm -f work/planets/cc/zips/*
 
 multiPackage:
   #
@@ -39,9 +54,10 @@ multiPackage:
         'make'
 
         #   second the program, requires bp7, djgpp, tputuner, units
-        #   also ccpal.inc, required by utils
         'cd %base%\planets\cc'
-        'make cc.exe ccpal.inc'
+        'make source'
+        'make cc.exe'
+        'make ccpal.inc'
 
         #   utilities
         'cd %base%\planets\cc\utils'
@@ -58,6 +74,111 @@ multiPackage:
 
     packageScript: |
       cp "$1/work/planets/cc/zips/"*.zip .
+
+  #
+  #  Scripting Engine
+  #
+  #  Produces zip versioned with the version number passed in as PCC_VERSION.
+  #
+  script:
+    buildScript: |
+      flag_enable ccs
+
+      cmd=(
+        # build planets\cc
+        #   first the build tools, requires bp7, djgpp (for djperl)
+        'cd %base%\planets\cc\build'
+        'make'
+
+        #   second the program, requires bp7, djgpp, tputuner, units
+        'cd %base%\planets\cc'
+        'make source'
+        'make cc.res cc.lst'
+        'make ccs.exe'
+        'make ccs.res'
+
+        # Package it
+        'cd %base%\planets\cc'
+        'if exist zips\ccs.zip del zips\ccs.zip'
+        'build\checklst `type ziplist\ccs.lst`'
+        'pkzip zips\ccs @ziplist\ccs.lst'
+      )
+      dos_run "${cmd[@]}"
+
+    packageVars: [PCC_VERSION]
+    packageScript: |
+      cp "$1/work/planets/cc/zips/ccs.zip" ccs${PCC_VERSION:-}.zip
+
+  #
+  #  Simulator
+  #
+  #  Produces zip versioned with the version number passed in as PCC_VERSION.
+  #  (This zip often exceeds the 8.3 file name length.)
+  #
+  sim:
+    buildScript: |
+      flag_enable ccbsim
+
+      cmd=(
+        # build planets\cc
+        #   first the build tools, requires bp7, djgpp (for djperl)
+        'cd %base%\planets\cc\build'
+        'make'
+
+        #   second the program, requires bp7, djgpp, tputuner, units
+        'cd %base%\planets\cc'
+        'make source'
+        'make cc.res cc.lst'
+        'make ccbsim.res ccships.res'
+        'make ccbsim.exe'
+
+        # Package it
+        'cd %base%\planets\cc'
+        'if exist zips\ccbsim.zip del zips\ccbsim.zip'
+        'build\checklst `type ziplist\ccbsim.lst`'
+        'pkzip zips\ccbsim @ziplist\ccbsim.lst'
+      )
+      dos_run "${cmd[@]}"
+
+    packageVars: [PCC_VERSION]
+    packageScript: |
+      cp "$1/work/planets/cc/zips/ccbsim.zip" ccbsim${PCC_VERSION:-}.zip
+
+  #
+  #  Ships
+  #
+  #  Produces zip versioned with the version number passed in as PCC_VERSION.
+  #  (This zip often exceeds the 8.3 file name length.)
+  #
+  ships:
+    buildScript: |
+      flag_enable ccships
+
+      cmd=(
+        # build planets\cc
+        #   first the build tools, requires bp7, djgpp (for djperl)
+        'cd %base%\planets\cc\build'
+        'make'
+
+        #   second the program, requires bp7, djgpp, tputuner, units
+        'cd %base%\planets\cc'
+        'make source'
+        'make cc.res cc.lst'
+        'make ccships.res'
+        'make ccships.exe'
+
+        # Package it
+        'cd %base%\planets\cc'
+        'if exist zips\ccships.zip del zips\ccships.zip'
+        'build\checklst `type ziplist\ccships.lst`'
+        'pkzip zips\ccships @ziplist\ccships.lst'
+      )
+      dos_run "${cmd[@]}"
+
+    packageVars: [PCC_VERSION]
+    packageScript: |
+      cp "$1/work/planets/cc/zips/ccships.zip" ccships${PCC_VERSION:-}.zip
+
 
   #
   #  Unversioned extras
