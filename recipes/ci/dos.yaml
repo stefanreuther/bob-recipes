@@ -1,0 +1,18 @@
+#
+#  DOS CI build
+#
+
+root: true
+
+inherit:
+  - env::dos
+
+depends:
+  - planets::dos::pcc-main
+  - planets::dos::pcc-extra
+
+buildScript: |
+  true
+
+packageScript: |
+  true

@@ -1,0 +1,103 @@
+#
+#  PCC 1.x and derivatives
+#
+
+inherit:
+  - copy
+  - dos
+
+depends:
+  - planets::dos::env
+
+buildScript: |
+  shallowCopy "${BOB_DEP_PATHS[planets::dos::env]}" .
+
+  # Environment
+  # Tell DJGPP that we only have 8.3 file names
+  dos_setenv lfn n
+
+  # Paths
+  dos_setenv base '\work'
+  dos_setenv path '%base%\bp7\bin;%base%\djgpp\bin;%base%\tools;%base%\vsmake;%path%'
+  dos_setenv djgpp '%base%\djgpp\djgpp.env'
+
+multiPackage:
+  #
+  #  Main version
+  #
+  #  Produces versioned zips. The version number is taken from 'version.inc'
+  #  embedded in the source code. This performs additional consistency checks
+  #  (using the release.pl script) and will refuse producing an inconsistent
+  #  release.
+  #
+  main:
+    buildScript: |
+      cmd=(
+        # build planets\cc
+        #   first the build tools, requires bp7, djgpp (for djperl)
+        'cd %base%\planets\cc\build'
+        'make'
+
+        #   second the program, requires bp7, djgpp, tputuner, units
+        #   also ccpal.inc, required by utils
+        'cd %base%\planets\cc'
+        'make cc.exe ccpal.inc'
+
+        #   utilities
+        'cd %base%\planets\cc\utils'
+        'make'
+
+        # Package the release. This will builld
+        #   ccX, ccXhtm, ccXman, ccXdoc, ccXger, ccXdb
+        # using the version number in version.inc.
+        'cd %base%\planets\cc'
+        'make cc.exe'
+        'djperl build\release.pl'
+      )
+      dos_run "${cmd[@]}"
+
+    packageScript: |
+      cp "$1/work/planets/cc/zips/"*.zip .
+
+  #
+  #  Unversioned extras
+  #
+  extra:
+    buildScript: |
+      cmd=(
+        #   first the build tools, requires bp7, djgpp (for djperl)
+        'cd %base%\planets\cc\build'
+        'make'
+
+        #   cc256
+        'cd %base%\planets\cc'
+        'make cc256.res'
+
+        #   utilities
+        #'cd %base%\planets\cc\utils'
+        #'make'
+
+        # repedit/ccprint
+        'cd %base%\planets\cc\repedit'
+        'make'
+        'cd %base%\planets\cc'
+        'if exist zips\ccprint.zip del zips\ccprint.zip'
+        'build\checklst `type ziplist\print.lst`'
+        'pkzip zips\ccprint @ziplist\print.lst -x!*.*'
+
+        # cchtml
+        'cd %base%\planets\cc'
+        'if exist zips\cchtml.zip del zips\cchtml.zip'
+        'build\checklst `type ziplist\cchtml.lst`'
+        'pkzip zips\cchtml.zip @ziplist\cchtml.lst'
+
+        # cc256
+        'cd %base%\planets\cc'
+        'make cc256.res'
+        'if exist zips\cc256.zip del zips\cc256.zip'
+        'pkzip zips\cc256.zip doc\eng\pictures.doc utils\pictures.bat cc256.res'
+      )
+      dos_run "${cmd[@]}"
+
+    packageScript: |
+      cp "$1/work/planets/cc/zips/"*.zip .

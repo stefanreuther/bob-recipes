@@ -1,0 +1,63 @@
+#
+#  Using DOS toolchain from bob recipes
+#
+#  Usage:
+#  - prepare a nice environment (could be by symlinking, copying, etc.) in the workspace
+#    that will be presented as a DOS drive
+#  - call 'dos_setenv' to publish environment variables into that environment (e.g. PATH)
+#  - call 'dos_run' to execute commands with the given environment variables
+#
+#  As of 20200410, this is implemented using DOSEMU but could be implemented by DOSBOX
+#  as well. For the current workload (djgpp, Turbo C/Pascal) DOSEMU seems a lot faster
+#  and (unlike DOSBOX) has a console mode so one can see the DOS program's output with
+#  'bob dev -v'.
+#
+
+buildScript: &theScript |
+  # set a DOS environment variable
+  dos_setenv() {
+    printf 'set %s=%s\r\n' "$1" "$2" >>env.bat
+  }
+
+  # run list of commands with the provided environment variables,
+  # having the current directory mounted as root drive.
+  # Passes the success/failure code outwards.
+  dos_run() {
+    # Create a file on success to pass success status outward.
+    rm -f run.ok
+
+    # Create batch file to run in DOSEMU.
+    (
+      printf '@d:\r\n'
+      printf '@call env.bat\r\n'
+      printf '%s\r\n@if errorlevel 1 goto out\r\n' "$@"
+      printf '@echo ok > d:\\run.ok\r\n'
+      printf ':out\r\n'
+    ) > run.bat
+
+    (
+      # Try to minimize DOSEMU's interaction with the terminal
+      export TERM=dumb
+
+      # Memory config
+      export dosemu__xms="32000" dosemu__ems="32000" dosemu__dpmi="32000"
+
+      # Disable speaker(?). I actually want to set this to empty (disabled)
+      # but that doesn't seem to be possible in an envariable.
+      export dosemu__speaker='emulated'
+
+      # Keyboard layout. If we don't set this, DOSEMU will wait for a keypress.
+      export dosemu__layout='us'
+
+      # We can only map the D drive from the outside, so use that
+      export DOSDRIVE_D=$PWD
+
+      dosemu -dumb d:run.bat
+    )
+    test -f run.ok
+  }
+
+  # create initial environment file, just in case. Set a nice prompt because why not; looks better in 'bob -v'
+  printf '@prompt $E[1m$P$G$E[0m \r\n' > env.bat
+
+packageScript: *theScript

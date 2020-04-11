@@ -1,0 +1,21 @@
+#
+#  DOS environment
+#
+#  From bob's point of view, this is the same as a "noarch" environment
+#  because it doesn't produce anything retargetable to different environments.
+#  It therefore provides only host tools.
+#
+#  If we eventually provide a sandbox using a DOS emulator, this will be
+#  set up here as well.
+#
+#  Consumers will also use class 'dos' to get commands to interact with
+#  the DOS execution environment.
+#
+
+environment:
+  HOSTCC: gcc
+  HOSTCXX: g++
+  HOSTCFLAGS: -O2 -W -Wall
+  HOSTCXXFLAGS: -O2 -W -Wall
+  HOSTLDFLAGS: ""
+
