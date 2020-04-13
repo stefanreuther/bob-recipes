@@ -1,0 +1,50 @@
+#
+#  Fontsel
+#
+#  Fontsel references the PCC tree and includes a bunch of units from there
+#  which (by recursive closure) references most of PCC. Therefore, PCC must
+#  be in a compilable state (preconditions generated) although we don't use
+#  most of it.
+#
+#  Unlike the published binaries this always builds upon a fresh PCC
+#  tree and therefore uses unoptimized units. (Published builds used
+#  whetever state the tree was in at the time).
+#
+
+inherit:
+  - copy
+  - dos
+
+depends:
+  - planets::dos::env
+
+buildScript: |
+  shallowCopy "${BOB_DEP_PATHS[planets::dos::env]}" .
+
+  # Environment
+  dos_setenv base '\work'
+  dos_setenv path '%base%\bp7\bin;%base%\djgpp\bin;%base%\tools;%base%\vsmake;%path%'
+  dos_setenv djgpp '%base%\djgpp\djgpp.env'
+
+  # Remove possible output
+  rm -f work/planets/ccfonts/ccfonts.zip
+
+  cmd=(
+    # PCC build tools and source; ccfonts references PCC tree
+    'cd %base%\planets\cc\build'
+    'make'
+    'cd %base%\planets\cc'
+    'make source'
+    'make cc.res'      # builds all the gfx/, cc.lst
+
+    # Actual target
+    'cd %base%\planets\ccfonts'
+    'call buildfs.bat'
+    'gmake fontsel.dat'
+    'pkzip ccfonts fontsel.exe fontsel.dat fonts.doc copying.mit'
+  )
+  dos_run "${cmd[@]}"
+
+
+packageScript: |
+  cp "$1/work/planets/ccfonts/ccfonts.zip" .

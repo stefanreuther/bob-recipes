@@ -13,6 +13,8 @@ depends:
   - planets::dos::pcc-script
   - planets::dos::pcc-ships
   - planets::dos::pcc-extra
+  - planets::dos::ccfonts
+  - planets::dos::tools
 
 buildScript: |
   true

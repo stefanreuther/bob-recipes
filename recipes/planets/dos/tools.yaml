@@ -1,0 +1,50 @@
+#
+#  Minor (self-contained) tools
+#
+#  We build these all in one place for simplicity and space efficiency.
+#  (Every package depending on / shallowCopy'ing planets::dos::env
+#  consumes ~120M disk space.)
+#
+
+root: true
+
+inherit:
+  - copy
+  - dos
+
+depends:
+  - planets::dos::env
+
+buildScript: |
+  shallowCopy "${BOB_DEP_PATHS[planets::dos::env]}" .
+
+  # Environment
+  dos_setenv base '\work'
+  dos_setenv path '%base%\bp7\bin;%base%\djgpp\bin;%base%\tools;%base%\vsmake;%path%'
+  dos_setenv djgpp '%base%\djgpp\djgpp.env'
+
+  cmd=(
+    'vsmake -C %base%/planets/check dist'
+    'vsmake -C %base%/planets/gh dist'
+    'vsmake -C %base%/planets/killrace dist'
+    'vsmake -C %base%/planets/mcheck dist'
+    'vsmake -C %base%/planets/mgrep dist'
+    'vsmake -C %base%/planets/tools dist'
+    'vsmake -C %base%/planets/un-trn dist'
+    'vsmake -C %base%/planets/viewmess dist'
+    'vsmake -C %base%/planets/viewship dist'
+  )
+  dos_run "${cmd[@]}"
+
+packageScript: |
+  cp "$1/work/planets/check/check.zip" .
+  cp "$1/work/planets/gh/gh.zip" .
+  cp "$1/work/planets/killrace/killrace.zip" .
+  cp "$1/work/planets/mcheck/mcheck.zip" .
+  cp "$1/work/planets/mgrep/mgrep.zip" .
+  cp "$1/work/planets/tools/exp.zip" .
+  cp "$1/work/planets/tools/m4u4v.zip" .
+  cp "$1/work/planets/tools/novcr.zip" .
+  cp "$1/work/planets/un-trn/un-trn.zip" .
+  cp "$1/work/planets/viewmess/viewmess.zip" .
+  cp "$1/work/planets/viewship/viewship.zip" .

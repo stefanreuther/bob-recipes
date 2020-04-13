@@ -7,6 +7,9 @@
 #  - call 'dos_setenv' to publish environment variables into that environment (e.g. PATH)
 #  - call 'dos_run' to execute commands with the given environment variables
 #
+#  NOTE: batch files must be invoked using 'call' because DOS' default is to chain
+#  and not return to the invoker.
+#
 #  As of 20200410, this is implemented using DOSEMU but could be implemented by DOSBOX
 #  as well. For the current workload (djgpp, Turbo C/Pascal) DOSEMU seems a lot faster
 #  and (unlike DOSBOX) has a console mode so one can see the DOS program's output with
