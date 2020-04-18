@@ -1,0 +1,31 @@
+#
+#  PCC Release
+#
+
+root: true
+
+inherit:
+  - copy
+  - env::dos
+
+depends:
+  - planets::dos::pcc-main
+  - planets::dos::pcc-script
+  - planets::dos::pcc-sim
+  - planets::dos::pcc-ships
+
+buildScript: |
+  for i in pcc-main pcc-script pcc-sim pcc-ships; do
+    shallowCopy "${BOB_DEP_PATHS[planets::dos::$i]}" .
+  done
+
+packageScript: |
+  shallowCopy "$1" .
+
+multiPackage:
+  1.1.20:
+    environment:
+      # PCC_VERSION = file name component
+      PCC_VERSION: "1120"
+      # DOS_PLANETS_REV = CVS tag
+      DOS_PLANETS_REV: "cc_1_1_20"
