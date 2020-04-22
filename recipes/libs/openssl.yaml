@@ -15,8 +15,8 @@ inherit:
 
 checkoutSCM:
   - scm: url
-    url: ${REPO_ROOT}/openssl-1.1.1f.tar.gz
-    digestSHA1: 238e001ea1fbf19ede43e36209c37c1a636bb51f
+    url: ${REPO_ROOT}/openssl-1.1.1g.tar.gz
+    digestSHA1: b213a293f2127ec3e323fb3cfc0c9807664fd997
     stripComponents: 1
 
 multiPackage:
