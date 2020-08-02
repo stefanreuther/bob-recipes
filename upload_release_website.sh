@@ -3,7 +3,7 @@
 #  Upload Website Release build
 #
 #  Host:
-#     bob dev --sandbox release/website-<date>
+#     bob build release::website-<date>
 #     upload_release_website.sh <date>
 #
 
