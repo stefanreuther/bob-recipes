@@ -69,11 +69,16 @@ multiPackage:
         'cd %base%\planets\cc'
         'make cc.exe'
         'djperl build\release.pl'
+
+        # Also spit out the HTML files here
+        'make todo.htm ccinf.htm'
       )
       dos_run "${cmd[@]}"
 
     packageScript: |
       cp "$1/work/planets/cc/zips/"*.zip .
+      cp "$1/work/planets/cc/ccinf.htm" ccinf.html
+      cp "$1/work/planets/cc/todo.htm" todo.html
 
   #
   #  Scripting Engine
