@@ -22,6 +22,7 @@ depends:
   - planets::pdk-bin
   - planets::peng-bin
   - planets::phost-pkg          # package, not bin!
+  - planets::sbreload-bin
   - server::lighttpd-bin
   - server::redis-bin
   - tools::bdiff-bin

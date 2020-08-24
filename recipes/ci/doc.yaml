@@ -15,6 +15,7 @@ depends:
   - planets::phost-doc
   - planets::maketurn-doc
   - planets::c2ng-doc
+  - planets::sbreload-doc
   - tools::bdiff-doc
   - libs::openssl-doc
 
