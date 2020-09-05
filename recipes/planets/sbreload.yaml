@@ -6,6 +6,7 @@ checkoutSCM:
   - scm: git
     url: ${GITROOT}/sbreload
     dir: .
+    rev: ${SBRELOAD_REV:-refs/heads/master}
 
 multiPackage:
   # Binary
