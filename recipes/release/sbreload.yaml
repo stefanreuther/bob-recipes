@@ -8,7 +8,7 @@ multiPackage:
   v0.42:
     environment:
       SBRELOAD_REV: refs/tags/v0.42
-    multiPackage:
+    multiPackage: &thePackage
       linux-x64:
         inherit:
           - env::amd64-linux-gcc49
@@ -22,6 +22,11 @@ multiPackage:
           PHOST_TARGET: linux-x86
         depends:
           - planets::sbreload-bin
+
+  v0.43:
+    environment:
+      SBRELOAD_REV: refs/tags/v0.43
+    multiPackage: *thePackage
 
 inherit:
   - copy
