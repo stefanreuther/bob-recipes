@@ -9,7 +9,7 @@ inherit: [copy]
 #   out/          Doxygen result (i.e. out/html/ and so on)
 #   Warnings      Warnings for manual inspection
 #   out/Tagfile   Tagfile
-buildScript: |
+buildSetup: |
   buildDoxygen() {
     # Determine tagfiles
     tagfiles=""
@@ -30,7 +30,7 @@ buildScript: |
   }
 
 # Invoke 'packageDoxygen $1' to publish.
-packageScript: |
+packageSetup: |
   packageDoxygen() {
     shallowCopy "$1/out" .
   }

@@ -11,7 +11,7 @@ depends:
 # Use 'doGenerate PARM=VALUE...' to generate the Makefile.
 # This passes along the compiler environment.
 # You need to provide IN, OUT, TARGET, and additional per-target configuration (e.g. CXXTESTDIR).
-buildScript: |
+buildSetup: |
   doGenerate() {
     perl "${BOB_DEP_PATHS[tools::buildsys]}/Make.pl" CROSS_COMPILE="${CROSS_COMPILE:-}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" RUN="${RUN:-}" "$@"
   }

@@ -16,7 +16,7 @@
 #  'bob dev -v'.
 #
 
-buildScript: |
+buildSetup: |
   # set a DOS environment variable
   dos_setenv() {
     printf 'set %s=%s\r\n' "$1" "$2" >>env.bat
@@ -60,5 +60,6 @@ buildScript: |
     test -f run.ok
   }
 
+buildScript: |
   # create initial environment file, just in case. Set a nice prompt because why not; looks better in 'bob -v'
   printf '@prompt $E[1m$P$G$E[0m \r\n' > env.bat

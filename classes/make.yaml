@@ -5,7 +5,7 @@
 buildVars: [CC, CXX, CFLAGS, CXXFLAGS, LDFLAGS, TARGET, CROSS_COMPILE, RUN]
 buildVarsWeak: [NPROC]
 
-buildScript: |
+buildSetup: |
   # Call make with the given parameters.
   # Automatically provides configuration (-j / NPROC).
   # Use this whenever you just want to invoke "make".

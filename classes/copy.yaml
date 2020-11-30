@@ -4,7 +4,7 @@
 #  This used to be "cp" and "cp -l".
 #  For now, we're using "rsync" which allows exclusion of files.
 #
-buildScript: &theScript |
+buildSetup: &theScript |
   # Make a shallow copy, i.e. make it efficient but modifying one file may have effects on the source.
   # Use this if you do not intend modifying the copy.
   shallowCopy() {
@@ -20,4 +20,4 @@ buildScript: &theScript |
     rsync -a -H --exclude=.mark --exclude=.git --exclude=CVS --exclude=.svn "$1"/ "$2"/
   }
 
-packageScript: *theScript
+packageSetup: *theScript
