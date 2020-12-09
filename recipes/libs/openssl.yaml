@@ -15,9 +15,15 @@ inherit:
 
 checkoutSCM:
   - scm: url
-    url: ${REPO_ROOT}/openssl-1.1.1g.tar.gz
-    digestSHA1: b213a293f2127ec3e323fb3cfc0c9807664fd997
+    url: ${REPO_ROOT}/openssl-1.1.1i.tar.gz
+    digestSHA1: eb684ba4ed31fe2c48062aead75233ecd36882a6
     stripComponents: 1
+
+# OpenSSL 1.1.1i tries to create a directory apps/include during build, which fails with
+#   mkdir /bob/8760da0776d9cb2c19d4b257915dd9d1acf30f54/workspace/test/../apps/include: Read-only file system at /bob/8760da0776d9cb2c19d4b257915dd9d1acf30f54/workspace/Configure line 1684.
+# This directory doesn't seem to serve any purpose other than being there. So give it one.
+checkoutScript: |
+  mkdir -p apps/include
 
 multiPackage:
   bin:
