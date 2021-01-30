@@ -28,6 +28,11 @@ multiPackage:
       SBRELOAD_REV: refs/tags/v0.43
     multiPackage: *thePackage
 
+  v0.44:
+    environment:
+      SBRELOAD_REV: refs/tags/v0.44
+    multiPackage: *thePackage
+
 inherit:
   - copy
 buildScript: |
