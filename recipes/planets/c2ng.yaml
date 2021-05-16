@@ -8,9 +8,16 @@ depends:
 
 checkoutVars: [CVSROOT]
 checkoutSCM:
-  scm: cvs
-  cvsroot: ${CVSROOT}
-  module: c2ng
+  # Old:
+  # scm: cvs
+  # cvsroot: ${CVSROOT}
+  # module: c2ng
+
+  # New, since 2.40.10:
+  scm: git
+  url: ${GITROOT}/c2ng
+  dir: .
+  rev: ${C2NG_REV:-refs/heads/master}
 
 multiPackage:
   bin:
