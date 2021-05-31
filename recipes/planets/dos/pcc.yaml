@@ -123,6 +123,7 @@ multiPackage:
   sim:
     buildScript: |
       flag_enable ccbsim
+      flag_enable FLAK
 
       cmd=(
         # build planets\cc
