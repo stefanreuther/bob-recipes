@@ -44,6 +44,24 @@ multiPackage:
       make -C "$1"/pcc-v2 prefix="$PWD/usr/local" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
       rm -f install.log
 
+  bin-nogui:
+    depends:
+      - planets::pdk-bin
+    buildVars: [RUN]
+    buildScript: |
+      # Fetch and set up source
+      deepCopy "$1" .
+      cd pcc-v2
+      ln -sf ../cpluslib
+
+      # Build
+      ./configure --with-pdk=${BOB_DEP_PATHS[planets::pdk-bin]}/opt/pdk/legacy --with-sdl-prefix=/gibts/ned
+      doMake
+
+    packageScript: |
+      make -C "$1"/pcc-v2 prefix="$PWD/usr/local" INSTLOG="$PWD/install.log" INSTALL_FLAGS=-O install
+      rm -f install.log
+
   # Package
   pkg:
     depends:

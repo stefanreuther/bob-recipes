@@ -12,6 +12,7 @@ depends:
   - planets::maketurn-bin
   - planets::pdk-bin
   - planets::pcc2-bin
+  - planets::pcc2-bin-nogui
   - planets::pcc2-pkg
 
 buildScript: "true"
