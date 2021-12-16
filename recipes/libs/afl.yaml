@@ -13,9 +13,16 @@ depends:
 
 checkoutVars: [CVSROOT]
 checkoutSCM:
-  scm: cvs
-  cvsroot: ${CVSROOT}
-  module: afl
+  # Old:
+  # scm: cvs
+  # cvsroot: ${CVSROOT}
+  # module: afl
+
+  # New, since 2.40.11:
+  scm: git
+  url: ${GITROOT}/afl
+  dir: .
+  rev: ${AFL_REV:-refs/heads/master}
 
 multiPackage:
   # Regular binary package
