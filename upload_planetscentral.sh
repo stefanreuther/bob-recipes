@@ -17,3 +17,5 @@ if test -z "$p"; then
 fi
 
 rsync -vrlptS --delete "$p/" pcc:relay/
+
+echo 'rsync -vrlptS relay/opt/ /opt/' | ssh pcc 'cat > relay/sync.sh'
