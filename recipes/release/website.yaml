@@ -69,6 +69,14 @@ multiPackage:
     depends:
       - planets::website-release
 
+  "20211220":
+    environment:
+      PLANETS_JS_REV:       pcc_20211220
+      PLANETS_C2WEB_REV:    pcc_20211220
+      PLANETS_CC2RES_REV:   pcc_20211220
+    depends:
+      - planets::website-release
+
 inherit:
   - copy
   - env::native-gcc
