@@ -1,0 +1,33 @@
+#
+#  Agave Tequilana
+#
+
+checkoutSCM:
+  - scm: git
+    url: ${GITROOT}/tequila
+    dir: .
+    rev: ${SBRELOAD_REV:-refs/heads/master}
+
+multiPackage:
+  # Binary
+  bin:
+    inherit: [make, buildsys]
+    depends:
+      - planets::pdk-bin
+
+    buildScript: |
+      doGenerate IN="$1" PDK_DIR="${BOB_DEP_PATHS[planets::pdk-bin]}/opt/pdk"
+      doMake
+
+    packageScript: |
+      mkdir -p bin
+      cp "$1"/cactus bin/
+
+  # Documentation
+  doc:
+    inherit: [copy]
+    buildScript: |
+      cp "$1"/*.md .
+
+    packageScript: |
+      shallowCopy "$1" .

@@ -16,6 +16,7 @@ depends:
   - planets::maketurn-doc
   - planets::c2ng-doc
   - planets::sbreload-doc
+  - planets::tequila-doc
   - tools::bdiff-doc
   - libs::openssl-doc
 
