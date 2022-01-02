@@ -3,9 +3,14 @@ inherit:
 
 checkoutVars: [CVSROOT]
 checkoutSCM:
-  - scm: cvs
-    cvsroot: ${CVSROOT}
-    module: pdk
+  - scm: git
+    url: ${GITROOT}/pdk
+    dir: .
+    rev: ${PDK_REV:-refs/heads/master}
+
+  #- scm: cvs
+  #  cvsroot: ${CVSROOT}
+  #  module: pdk
 
 multiPackage:
   # Regular binary for target architecture
