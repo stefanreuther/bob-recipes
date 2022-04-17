@@ -29,6 +29,7 @@ multiPackage:
            -DLIB_VERSION=".$TODAY" \
            -DC2W_VERSION=".$TODAY" \
            -DUSER_VERSION="$TODAY-T" \
+           -DC2CONFIG=/srv/config/c2config.txt \
            --cgi="$1" \
            --output="." \
            --assets="${BOB_DEP_PATHS[planets::cc2res-dat]}/web" \
@@ -38,6 +39,38 @@ multiPackage:
 
     packageScript: |
       shallowCopy "$1" .
+
+  #
+  #  website-daily-test: same as website-daily-dat, but not configured (for testing)
+  #
+  #  Not for deployment anywhere.
+  #
+  daily-test:
+    depends:
+      - name: tools::jstool-host
+        use: [tools]
+      - planets::cc2res-dat
+      - planets::js-pcc-dat
+      - planets::js-c2web-dat
+
+    buildTools: [jstool]
+
+    buildScript: |
+      rm -rf *
+      perl $1/install.pl \
+           -DLIB_VERSION=".TEST" \
+           -DC2W_VERSION=".TEST" \
+           -DUSER_VERSION="TEST" \
+           --cgi="$1" \
+           --output="." \
+           --assets="${BOB_DEP_PATHS[planets::cc2res-dat]}/web" \
+           --scripts="${BOB_DEP_PATHS[planets::js-pcc-dat]}" \
+           --c2web="${BOB_DEP_PATHS[planets::js-c2web-dat]}" \
+           --jsmin=jsmin
+
+    packageScript: |
+      shallowCopy "$1" .
+
 
   #
   #  website-dev: developer version for local use
@@ -97,6 +130,7 @@ multiPackage:
            -DLIB_VERSION=".${PLANETS_JS_REV/pcc_}" \
            -DC2W_VERSION=".${PLANETS_JS_REV/pcc_}" \
            -DUSER_VERSION="${PLANETS_C2WEB_REV/pcc_}" \
+           -DC2CONFIG=/srv/config/c2config.txt \
            --cgi="$1" \
            --output="." \
            --assets="${BOB_DEP_PATHS[planets::cc2res-dat]}/web" \
