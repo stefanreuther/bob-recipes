@@ -1,0 +1,31 @@
+#
+#  Agave Tequilana - Releases
+#
+
+root: true
+
+multiPackage:
+  v0.42:
+    environment:
+      TEQUILA_REV: refs/tags/v0.42
+    multiPackage: &thePackage
+      linux-x64:
+        inherit:
+          - env::amd64-linux-gcc49
+        depends:
+          - planets::tequila-bin
+
+      linux-x86:
+        inherit:
+          - env::i386-linux-gcc3
+        environment:
+          PHOST_TARGET: linux-x86
+        depends:
+          - planets::tequila-bin
+
+inherit:
+  - copy
+buildScript: |
+  shallowCopy "${BOB_DEP_PATHS[planets::tequila-bin]}" .
+packageScript: |
+  shallowCopy "$1" .

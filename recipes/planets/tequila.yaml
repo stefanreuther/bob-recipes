@@ -6,7 +6,7 @@ checkoutSCM:
   - scm: git
     url: ${GITROOT}/tequila
     dir: .
-    rev: ${SBRELOAD_REV:-refs/heads/master}
+    rev: ${TEQUILA_REV:-refs/heads/master}
 
 multiPackage:
   # Binary
