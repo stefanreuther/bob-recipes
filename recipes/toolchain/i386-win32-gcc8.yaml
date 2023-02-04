@@ -1,0 +1,113 @@
+#
+#  MinGW toolchain
+#
+
+inherit:
+  - env::amd64-linux-gcc49
+  - make
+  - copy
+
+depends:
+  - libs::gmp
+  - libs::mpfr
+  - libs::mpc
+
+checkoutSCM:
+  - scm: url
+    url: ${REPO_ROOT}/gcc-8.2.0.tar.xz
+    digestSHA1: 19926bdb6c4b58891015929853d41aeff019d400
+    stripComponents: 1
+    dir: gcc
+  - scm: url
+    url: ${REPO_ROOT}/binutils-2.31.90.tar.xz
+    digestSHA1: 232acbfba2fba3f8f1da3e59f047e67d36602cb2
+    stripComponents: 1
+    dir: binutils
+  - scm: git
+    url: ${GITROOT}/mingw
+    dir: mingw
+    commit: 41051261f94469e200067617895d4ea7449ffe35
+
+##
+##  Build a 32-bit mingw on Linux
+##
+##  For the build logic, see <https://sourceforge.net/p/mingw-w64/wiki2/Cross%20Win32%20and%20Win64%20compiler/>
+##
+buildSetup: |
+  # Input directory
+  in=$1
+
+  # Output directory (needs to be direct subdirectory of $PWD
+  out=$PWD/result
+
+  # Sysroot. Needs to be a proper subdirectory of $out.
+  # If it is equal to $out, the resulting toolchain will work, but not be relocatable.
+  sys=$out/sysroot
+
+buildScript: |
+  ## Need to be careful with variables. Clear those we don't need now; clear others when invoking MinGW because it gets confused if we give it a 'CC'.
+  ## Note that 'xx=' is not the same as 'unset xx'!
+  unset RUN TARGET
+
+  ## Binutils
+  rm -rf binutils-build
+  mkdir -p binutils-build
+  (
+    cd binutils-build
+    $in/binutils/configure --target=i686-w64-mingw32 --prefix=$out --with-sysroot=$sys --disable-nls --disable-gettext
+    doMake
+    make install-strip
+  )
+
+  ## Headers
+  rm -rf header-build
+  mkdir -p header-build
+  (
+    cd header-build
+    unset CC CXX CFLAGS CXXFLAGS LDFLAGS CROSS_COMPILE
+    $in/mingw/mingw-w64-headers/configure --prefix=$sys --host=i686-w64-mingw32
+    make install
+  )
+  ( cd $sys && rm -f mingw && ln -s . mingw )              # needed by gcc to find includes
+
+  ## gcc
+  rm -rf gcc-build
+  mkdir -p gcc-build
+  gccopts=(
+    --prefix=$out
+    --target=i686-w64-mingw32
+    --enable-languages=c,c++
+    --disable-nls
+    --disable-gettext
+    --disable-multilib
+    --with-sysroot=$sys
+    --with-gmp=${BOB_DEP_PATHS[libs::gmp]}/opt/gmp
+    --with-mpfr=${BOB_DEP_PATHS[libs::mpfr]}/opt/mpfr
+    --with-mpc=${BOB_DEP_PATHS[libs::mpc]}/opt/mpc
+  )
+  ( cd gcc-build && PATH=$out/bin:$PATH $in/gcc/configure "${gccopts[@]}" )
+  ( cd gcc-build && PATH=$out/bin:$PATH doMake all-gcc )
+  ( cd gcc-build && PATH=$out/bin:$PATH make install-gcc )
+
+  ## CRT
+  rm -rf crt-build
+  mkdir -p crt-build
+  (
+    cd crt-build
+    unset CC CXX CFLAGS CXXFLAGS LDFLAGS CROSS_COMPILE
+    PATH=$out/bin:$PATH
+    $in/mingw/mingw-w64-crt/configure --prefix=$sys --host=i686-w64-mingw32
+    doMake
+    make install
+  )
+
+  ## gcc final
+  ( cd gcc-build && PATH=$out/bin:$PATH doMake )
+  ( cd gcc-build && PATH=$out/bin:$PATH make install-strip )
+
+packageScript: |
+  deepCopy $1/result .
+
+provideTools:
+  compiler:
+    path: bin

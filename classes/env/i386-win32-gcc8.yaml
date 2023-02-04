@@ -1,0 +1,34 @@
+#
+#  Environment: MinGW gcc on AMD64 Linux
+#
+environment:
+  CC: i686-w64-mingw32-gcc
+  CXX: i686-w64-mingw32-g++
+  CFLAGS: -O2 -W -Wall
+  CXXFLAGS: -O2 -W -Wall
+  LDFLAGS: ""
+  RUN: WINEPATH=/usr/lib/gcc/i686-w64-mingw32/4.9-win32 wine32
+  CROSS_COMPILE: i686-w64-mingw32-
+  TARGET: Win32
+
+  HOSTCC: gcc-4.9
+  HOSTCXX: g++-4.9
+  HOSTCFLAGS: -O2 -W -Wall
+  HOSTCXXFLAGS: -O2 -W -Wall
+  HOSTLDFLAGS: ""
+
+depends:
+  - name: toolchain::amd64-linux-gcc49
+    forward: true
+    use: [sandbox]
+  - name: toolchain::i386-win32-gcc8
+    forward: true
+    use: [result, tools]
+  - if: $(not,$(is-sandbox-enabled))
+    depends: ["Environment i386-win32-gcc8 usable with sandbox enabled"]
+
+buildTools:
+  - compiler
+
+packageTools:
+  - compiler

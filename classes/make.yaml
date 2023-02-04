@@ -4,6 +4,7 @@
 
 buildVars: [CC, CXX, CFLAGS, CXXFLAGS, LDFLAGS, TARGET, CROSS_COMPILE, RUN]
 buildVarsWeak: [NPROC]
+buildTools: [compiler]
 
 buildSetup: |
   # Call make with the given parameters.

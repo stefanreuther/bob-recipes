@@ -4,7 +4,7 @@
 #
 # Original package repository created from original Debian CD using:
 #  cp $(perl depacker.pl --ignore-package=liblucene4-java --list-file=/media/cdrom/dists/jessie/main/binary-amd64/Packages.gz \
-#    mawk gcc-4.9 g++-4.9 bash perl perl-base make sed coreutils findutils grep diffutils zlib1g-dev dpkg tar gzip cvs git rsync bzip2 file libc-bin \
+#    mawk gcc-4.9 g++-4.9 bash perl perl-base make sed coreutils findutils grep diffutils zlib1g-dev dpkg tar gzip cvs git rsync bzip2 file libc-bin m4 \
 #    --show-attr=filename --filename-root=/media/cdrom) repo/amd64-linux-gcc49/
 inherit:
   - copy
@@ -29,6 +29,7 @@ buildScript: |
      rsync                    # required by 'copy' class
      file                     # required by some configure scripts to figure out the object file format
      libc-bin                 # provides ldconfig
+     m4                       # required by some configure scripts
   )
   perl "${BOB_DEP_PATHS[tools::depacker]}/depacker.pl" --list-file="${REPO_ROOT}/amd64-linux-gcc49/*.deb" --install=. ${packages[@]}
 

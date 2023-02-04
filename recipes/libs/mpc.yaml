@@ -1,0 +1,38 @@
+#
+#  libmpc
+#
+#  Installs to /opt/mpc
+#
+
+inherit: [make, copy]
+
+depends:
+  - libs::gmp
+  - libs::mpfr
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/mpc-1.0.3.tar.gz
+  digestSHA1: b8be66396c726fdc36ebb0f692ed8a8cca3bcc66
+  stripComponents: 1
+  dir: .
+
+buildScript: |
+  opts=(
+     --disable-shared
+     --enable-static
+     --prefix=/opt/mpc
+     --with-gmp=${BOB_DEP_PATHS[libs::gmp]}/opt/gmp
+     --with-mpfr=${BOB_DEP_PATHS[libs::mpfr]}/opt/mpfr
+     CFLAGS="${CFLAGS} -Wno-sign-compare"
+  )
+  $1/configure "${opts[@]}"
+  doMake
+
+  rm -rf dist
+  mkdir dist
+  make DESTDIR=$PWD/dist install
+
+packageScript: |
+  shallowCopy "$1/dist" .
+  rm -f opt/mpc/lib/*.la
