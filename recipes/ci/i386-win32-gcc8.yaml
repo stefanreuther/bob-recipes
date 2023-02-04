@@ -7,9 +7,10 @@ root: true
 inherit:
   - env::i386-win32-gcc8
 
-#depends:
+depends:
 #  - planets::maketurn-bin
 #  - libs::afl-bin
+  - libs::openssl-bin
 
 buildScript: "true"
 packageScript: "true"

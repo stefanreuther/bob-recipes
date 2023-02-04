@@ -28,12 +28,31 @@ checkoutScript: |
 multiPackage:
   bin:
     buildScript: |
+      # Determine target machine
+      case $(${CC} -dumpmachine) in
+        i386*linux*)
+          # e.g. i386-linux [untested]
+          MACH=linux-x86
+          ;;
+        x86_64*linux*)
+          # e.g. x86_64-pc-linux-gnu, x86_64-linux-gnu
+          MACH=linux-x86_64
+          ;;
+        *mingw32)
+          # e.g. i686-w64-mingw32
+          MACH=mingw
+          ;;
+        *)
+          echo "Unable to determine OpenSSL target machine." >&2
+          exit 1
+      esac
+
       # FIXME: --with-zlib?
       opts=(
          # Pass target macros
          --cross-compile-prefix="${CROSS_COMPILE}"
-         CC="${CC}"
-         CXX="${CXX}"
+         CC="${CC#${CROSS_COMPILE}}"
+         CXX="${CXX#${CROSS_COMPILE}}"
          CFLAGS="${CFLAGS} -w"
          CXXFLAGS="${CXXFLAGS} -w"
          LDFLAGS="${LDFLAGS}"
@@ -46,7 +65,7 @@ multiPackage:
          # No dependencies. This would attempt to write into the build directory during packaging.
          no-makedepend
       )
-      $1/config "${opts[@]}"
+      $1/Configure $MACH "${opts[@]}"
       doMake
 
     packageScript: |
