@@ -7,6 +7,11 @@ buildVarsWeak: [NPROC]
 buildTools: [compiler]
 
 buildSetup: |
+  # Capture all paths
+  # This is for use by the 'compiler' tool to examine the environment
+  MAKE_ALL_PATHS="${BOB_ALL_PATHS[@]}"
+  export MAKE_ALL_PATHS
+
   # Call make with the given parameters.
   # Automatically provides configuration (-j / NPROC).
   # Use this whenever you just want to invoke "make".

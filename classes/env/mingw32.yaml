@@ -1,15 +1,13 @@
 #
 #  Environment: MinGW32 native installation
 #
-#  FIXME: convert to sandboxed installation
-#
 environment:
   CC: i686-w64-mingw32-gcc
   CXX: i686-w64-mingw32-g++
   CFLAGS: -O2 -W -Wall
   CXXFLAGS: -O2 -W -Wall
   LDFLAGS: ""
-  RUN: WINEPATH=/usr/lib/gcc/i686-w64-mingw32/4.9-win32 wine32
+  RUN: winerunner
   CROSS_COMPILE: i686-w64-mingw32-
   TARGET: Win32
 
@@ -18,3 +16,14 @@ environment:
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""
+
+depends:
+  - name: toolchain::mingw32
+    forward: true
+    use: [result, tools]
+
+buildTools:
+  - compiler
+
+packageTools:
+  - compiler

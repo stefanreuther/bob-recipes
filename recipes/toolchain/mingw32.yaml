@@ -1,0 +1,45 @@
+#
+#  MinGW toolchain
+#
+#  We're using the MinGW toolchain that exists on the host,
+#  but we need to make it possible to run wine somehow,
+#  using the DLLs compiled by our users' dependencies.
+#
+#  Therefore,
+#  - the `make` class captures the dependency list as MAKE_ALL_PATHS
+#    (BOB_ALL_PATHS is not an exported environment variable)
+#  - we generate a tool `winerunner` that uses it to build a WINEPATH
+#  - the `env::mingw32` class publishes `winerunner` as RUN
+#
+
+buildScript: |
+  true
+
+packageScript: |
+  mkdir -p bin
+  cat >>bin/winerunner <<'EOF'
+  #!/bin/bash
+
+  WINEPATH=/usr/lib/gcc/i686-w64-mingw32/4.9-win32
+
+  check() {
+    if test -f "$2"; then
+      WINEPATH="$1;$WINEPATH"
+    fi
+  }
+
+  for i in $MAKE_ALL_PATHS; do
+    for b in "$i"/opt/*/bin; do
+      check "$b" "$b"/*.dll
+    done
+  done
+
+  export WINEPATH
+  wine32 "$@"
+  EOF
+  chmod +x bin/winerunner
+
+# Provide our script as 'compiler' tool so it can be accessed by everyone using us
+provideTools:
+  compiler:
+    path: bin

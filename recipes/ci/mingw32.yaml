@@ -9,7 +9,10 @@ inherit:
 
 depends:
   - planets::maketurn-bin
-  - libs::afl-bin
+  - name: libs::afl-bin
+    environment:
+      LOCAL_OPENSSL: "true"
+  - libs::openssl-bin
 
 buildScript: "true"
 packageScript: "true"

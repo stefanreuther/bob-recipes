@@ -5,11 +5,17 @@
 #
 #  Produces /opt/afl/{bin,lib,include} but is fully relocatable.
 #
+#  Variables:
+#    AFL_REV           git revision
+#    LOCAL_OPENSSL     if 'true', use own OpenSSL (unset: assume system provides it)
+#
 inherit:
   - copy
 
 depends:
   - libs::cxxtest
+  - name: libs::openssl-bin
+    if: ${LOCAL_OPENSSL:-false}
 
 checkoutVars: [CVSROOT]
 checkoutSCM:
@@ -28,9 +34,18 @@ multiPackage:
   # Regular binary package
   bin:
     inherit: [make, buildsys]
-    buildVars: [TARGET]
+    buildVars: [TARGET, LOCAL_OPENSSL]
     buildScript: |
-      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" prefix=/opt/afl
+      opts=(
+        IN="$1"
+        CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}"
+        TARGET="${TARGET:-POSIX}"
+        prefix=/opt/afl
+      )
+      if ${LOCAL_OPENSSL:-false}; then
+        opts+=(OPENSSL_DIR="${BOB_DEP_PATHS[libs::openssl-bin]}/opt/openssl")
+      fi
+      doGenerate "${opts[@]}"
       doMake rule_check
       doMake
       doMake test
