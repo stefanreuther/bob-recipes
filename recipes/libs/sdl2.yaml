@@ -1,0 +1,27 @@
+#
+#  SDL2
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/SDL2-2.0.20.tar.gz
+  digestSHA1: 18ce006cbf07502f48abfedc088c14404091f3d3
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    buildScript: |
+      CFLAGS="$CFLAGS -Wno-unused-parameter -Wno-sign-compare"
+      $1/configure --prefix=/opt/sdl2 --host=$($CC -dumpmachine) --disable-haptic --disable-sensor
+      doMake
+
+      rm -rf dist
+      mkdir dist
+      make DESTDIR=$PWD/dist install
+
+    packageScript: |
+      shallowCopy "$1/dist" .
+      rm -f opt/sdl2/lib/*.la

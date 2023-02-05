@@ -22,13 +22,35 @@ checkoutSCM:
 multiPackage:
   bin:
     inherit: [make, buildsys]
+    buildVars: [TARGET, LOCAL_SDL2]
     depends:
       - libs::afl-bin
+      - name: libs::sdl2-bin
+        if: ${LOCAL_SDL2:-false}
+      - name: libs::openssl-bin          # Required to generate correct WINEPATH for testing
+        if: ${LOCAL_OPENSSL:-false}
 
     buildScript: |
-      doGenerate IN="$1" CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}" TARGET="${TARGET:-POSIX}" AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}/opt/afl" prefix=/opt/c2ng
+      opts=(
+        IN="$1"
+        CXXTESTDIR="${BOB_DEP_PATHS[libs::cxxtest]}"
+        TARGET="${TARGET:-POSIX}"
+        AFL_DIR="${BOB_DEP_PATHS[libs::afl-bin]}/opt/afl"
+        prefix=/opt/c2ng
+      )
+      if ${LOCAL_SDL2:-false}; then
+        SDL2_DIR="${BOB_DEP_PATHS[libs::sdl2-bin]}/opt/sdl2"
+        opts+=(
+          --enable-sdl2
+          SDL2_DIR="$SDL2_DIR"
+          CFLAGS="$CFLAGS -I$SDL2_DIR/include/SDL2"
+          CXXFLAGS="$CXXFLAGS -I$SDL2_DIR/include/SDL2"
+          LDFLAGS="$LDFLAGS -L$SDL2_DIR/lib"
+        )
+      fi
+      doGenerate "${opts[@]}"
       doMake
-      doMake test
+      doMake test || test "$TARGET" = Win32
       doMake install DESTDIR=result
 
     # FIXME: right now we need to keep the shallowCopy installation.

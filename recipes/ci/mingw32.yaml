@@ -7,12 +7,16 @@ root: true
 inherit:
   - env::mingw32
 
+environment:
+  LOCAL_OPENSSL: "true"
+  LOCAL_SDL2: "true"
+
 depends:
   - planets::maketurn-bin
-  - name: libs::afl-bin
-    environment:
-      LOCAL_OPENSSL: "true"
   - libs::openssl-bin
+  - libs::sdl2-bin
+  - libs::afl-bin
+  - planets::c2ng-bin
 
 buildScript: "true"
 packageScript: "true"
