@@ -17,6 +17,7 @@ depends:
   - server::lighttpd-bin
   - server::lighttpd-ssl-bin
   - libs::openssl-bin
+  - tools::python-host
 
 buildScript: "true"
 packageScript: "true"

@@ -1,0 +1,29 @@
+#
+#  Python
+#
+#  Installs to /opt/libpng
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/Python-3.10.10.tgz
+  digestSHA1: a511e4fb91ef4ba143aec00d08439f6fd6fc45c1
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  host:
+    inherit:
+      - env::host
+    buildVars: [TARGET]
+    buildScript: |
+      $1/configure --prefix=/opt/python
+      doMake
+
+      rm -rf dist
+      make DESTDIR=dist install
+
+    packageScript: |
+      shallowCopy "$1/dist" .
