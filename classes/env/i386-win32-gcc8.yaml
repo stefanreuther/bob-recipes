@@ -8,6 +8,7 @@ environment:
   CXXFLAGS: -O2 -W -Wall
   LDFLAGS: ""
   RUN: WINEPATH=/usr/lib/gcc/i686-w64-mingw32/4.9-win32 wine32
+  SYSROOT: /usr/lib/gcc/i686-w64-mingw32/4.9-win32
   CROSS_COMPILE: i686-w64-mingw32-
   TARGET: Win32
 

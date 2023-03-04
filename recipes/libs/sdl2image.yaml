@@ -1,0 +1,81 @@
+#
+#  SDL2_image
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/SDL2_image-2.0.5.tar.gz
+  digestSHA1: c0aed07994f670a3758f6b8b93d9034a58df5781
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    depends:
+      - libs::sdl2-bin
+      - libs::libpng-bin
+      - libs::libjpeg-bin
+    provideDeps:
+      - libs::sdl2-bin
+      - libs::libpng-bin
+      - libs::libjpeg-bin
+    buildScript: |
+      cflags=(
+        $CFLAGS
+
+        # Disable warnings that I've seen with SDL2_image-2.0.5
+        -Wno-unused
+        -Wno-unused-parameter
+        -Wno-maybe-uninitialized
+        -Wno-sign-compare
+        -Wno-clobbered
+        -fno-strict-aliasing
+
+        # Manually forward dependencies' includes
+        -I"${BOB_DEP_PATHS[libs::libjpeg-bin]}/opt/libjpeg/include"
+        -I"${BOB_DEP_PATHS[libs::libpng-bin]}/opt/libpng/include"
+        -I"${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/include"
+      )
+      CFLAGS="${cflags[@]}"
+
+      ldflags=(
+        $LDFLAGS
+
+        # Manually forward dependencies' libs
+        -L"${BOB_DEP_PATHS[libs::libjpeg-bin]}/opt/libjpeg/lib"
+        -L"${BOB_DEP_PATHS[libs::libpng-bin]}/opt/libpng/lib"
+        -L"${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/lib"
+      )
+      LDFLAGS="${ldflags[@]}"
+
+      # Manually force libpng link; do not use pkg-config (that would use the host's version)
+      export LIBPNG_LIBS=-lpng
+      export PKG_CONFIG=false
+
+      opts=(
+        --disable-gif
+        --disable-lbm
+        --disable-pcx
+        --disable-pnm
+        --disable-svg
+        --disable-tga
+        --disable-tif
+        --disable-xcf
+        --disable-xpm
+        --disable-xv
+        --disable-webp
+        --with-sdl-prefix="${BOB_DEP_PATHS[libs::sdl2-bin]}/opt/sdl2"
+      )
+
+      $1/configure --prefix=/opt/sdl2image --host=$($CC -dumpmachine) "${opts[@]}"
+      doMake
+
+      rm -rf dist
+      mkdir dist
+      make DESTDIR=$PWD/dist install
+
+    packageScript: |
+      shallowCopy "$1/dist" .
+      rm -f opt/sdl2image/lib/*.la

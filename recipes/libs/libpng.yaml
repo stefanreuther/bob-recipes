@@ -1,0 +1,33 @@
+#
+#  libpng
+#
+#  Installs to /opt/libpng
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/libpng-1.6.39.tar.gz
+  digestSHA1: dfab091fe178afa126cb47942113c72f7f019955
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    depends:
+      - libs::zlib-bin
+    provideDeps:
+      - libs::zlib-bin
+    buildVars: [TARGET]
+    buildScript: |
+      export ZLIBINC=${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/include
+      export ZLIBLIB=${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/lib
+      export CPPFLAGS="-I$ZLIBINC ${CPPFLAGS:-}"
+      export LDFLAGS="-L$ZLIBLIB ${LDFLAGS:-}"
+      $1/configure --prefix=/opt/libpng --host=$($CC -dumpmachine)
+      doMake
+
+    packageScript: |
+      make -C $1 DESTDIR=$PWD install
+      rm -f opt/libpng/lib/*.la

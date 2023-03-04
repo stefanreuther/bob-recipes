@@ -13,3 +13,4 @@ environment:
   CROSS_COMPILE: ""
   TARGET: "POSIX"
   RUN: ""
+  SYSROOT: ""

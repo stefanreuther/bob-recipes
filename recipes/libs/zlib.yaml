@@ -1,0 +1,34 @@
+#
+#  zlib
+#
+#  Installs to /opt/zlib
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/zlib-1.2.13.tar.gz
+  digestSHA1: 55eaa84906f31ac20d725aa26cd20839196b6ba6
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    buildVars: [TARGET]
+    buildScript: |
+      CHOST=${CROSS_COMPILE%-} prefix=/opt/zlib $1/configure
+      doMake
+
+    packageScript: |
+      out=$PWD
+      make -C $1 DESTDIR=$out install
+      rm -f opt/zlib/lib/*.la
+
+      # zlib's build process does not automatically adapt to Windows conventions.
+      # Whack it right manually.
+      case "$TARGET" in
+        *Win*)
+          cp -L opt/zlib/lib/libz.so opt/zlib/lib/libz.dll
+          ;;
+      esac

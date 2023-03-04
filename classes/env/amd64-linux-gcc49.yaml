@@ -8,6 +8,7 @@ environment:
   CXXFLAGS: -O2 -W -Wall
   LDFLAGS: ""
   RUN: ""
+  SYSROOT: ""
   CROSS_COMPILE: ""
   TARGET: POSIX
 

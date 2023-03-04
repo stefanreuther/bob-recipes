@@ -22,13 +22,13 @@ checkoutSCM:
 multiPackage:
   bin:
     inherit: [make, buildsys]
-    buildVars: [TARGET, LOCAL_SDL2]
+    buildVars: [TARGET, LOCAL_SDL2, SYSROOT]
     depends:
       - libs::afl-bin
-      - name: libs::sdl2-bin
-        if: ${LOCAL_SDL2:-false}
-      - name: libs::openssl-bin          # Required to generate correct WINEPATH for testing
-        if: ${LOCAL_OPENSSL:-false}
+      - if: ${LOCAL_SDL2:-false}
+        depends:
+        - libs::sdl2-bin
+        - libs::sdl2image-bin
 
     buildScript: |
       opts=(
@@ -40,14 +40,18 @@ multiPackage:
       )
       if ${LOCAL_SDL2:-false}; then
         SDL2_DIR="${BOB_DEP_PATHS[libs::sdl2-bin]}/opt/sdl2"
+        SDL2_IMAGE_DIR="${BOB_DEP_PATHS[libs::sdl2image-bin]}/opt/sdl2image"
         opts+=(
           --enable-sdl2
           SDL2_DIR="$SDL2_DIR"
-          CFLAGS="$CFLAGS -I$SDL2_DIR/include/SDL2"
-          CXXFLAGS="$CXXFLAGS -I$SDL2_DIR/include/SDL2"
-          LDFLAGS="$LDFLAGS -L$SDL2_DIR/lib"
+          SDL2_IMAGE_DIR="$SDL2_IMAGE_DIR"
+          CFLAGS="$CFLAGS -I$SDL2_DIR/include/SDL2 -I$SDL2_IMAGE_DIR/include/SDL2"
+          CXXFLAGS="$CXXFLAGS -I$SDL2_DIR/include/SDL2 -I$SDL2_IMAGE_DIR/include/SDL2"
+          LDFLAGS="$LDFLAGS -L$SDL2_DIR/lib -L$SDL2_IMAGE_DIR/lib"
+          DLL_PATH="${MAKE_ALL_PATHS} ${SYSROOT}"
         )
       fi
+
       doGenerate "${opts[@]}"
       doMake
       doMake test || test "$TARGET" = Win32

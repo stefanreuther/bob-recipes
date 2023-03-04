@@ -16,6 +16,10 @@ depends:
   - libs::openssl-bin
   - libs::sdl2-bin
   - libs::afl-bin
+  - libs::zlib-bin
+  - libs::libpng-bin
+  - libs::libjpeg-bin
+  - libs::sdl2image-bin
   - planets::c2ng-bin
 
 buildScript: "true"

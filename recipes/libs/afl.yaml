@@ -17,6 +17,9 @@ depends:
   - name: libs::openssl-bin
     if: ${LOCAL_OPENSSL:-false}
 
+provideDeps:
+  - libs::openssl-bin
+
 checkoutVars: [CVSROOT]
 checkoutSCM:
   # Old:
