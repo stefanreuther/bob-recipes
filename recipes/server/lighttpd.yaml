@@ -1,8 +1,13 @@
 checkoutVars: [CVSROOT]
 checkoutSCM:
-  - scm: cvs
-    cvsroot: ${CVSROOT}
-    module: ext/lighttpd
+  #- scm: cvs
+  #  cvsroot: ${CVSROOT}
+  #  module: ext/lighttpd
+  - scm: url
+    url: ${REPO_ROOT}/lighttpd-1.4.69.tar.gz
+    digestSHA1: 7fbd8d4de6d2e00e1533abf1d8b322c0b595b7bb
+    stripComponents: 1
+    dir: .
 
 multiPackage:
   bin:
@@ -18,7 +23,7 @@ multiPackage:
     # so we cannot use a clean out-of-tree build here
     buildScript: |
       deepCopy "$1" .
-      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}"
+      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}" CC_FOR_BUILD="${CC}" --with-pcre --without-pcre2
       doMake
       doMake install DESTDIR="$PWD/result"
 
@@ -42,7 +47,7 @@ multiPackage:
     # so we cannot use a clean out-of-tree build here
     buildScript: |
       deepCopy "$1" .
-      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS} -Wl,-rpath,/opt/openssl/lib" --with-openssl="${BOB_DEP_PATHS[libs::openssl-bin]}/opt/openssl"
+      ./configure --prefix="/opt/lighttpd" --without-bzip2 CC="${CC}" CFLAGS="${CFLAGS}" CC_FOR_BUILD="${CC}" --with-pcre --without-pcre2 LDFLAGS="${LDFLAGS} -Wl,-rpath,/opt/openssl/lib" --with-openssl="${BOB_DEP_PATHS[libs::openssl-bin]}/opt/openssl"
       doMake
       doMake install DESTDIR="$PWD/result"
 
