@@ -15,8 +15,8 @@ inherit:
 
 checkoutSCM:
   - scm: url
-    url: ${REPO_ROOT}/openssl-1.1.1n.tar.gz
-    digestSHA1: 4b0936dd798f60c97c68fc62b73033ecba6dfb0c
+    url: ${REPO_ROOT}/openssl-1.1.1t.tar.gz
+    digestSHA1: a06b067b7e3bd6a2cb52a06f087ff13346ce7360
     stripComponents: 1
 
 # OpenSSL 1.1.1i tries to create a directory apps/include during build, which fails with
