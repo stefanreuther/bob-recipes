@@ -1,0 +1,28 @@
+#
+#  c2ng Release
+#
+
+root: true
+
+inherit:
+  - copy
+
+multiPackage:
+  win32:
+    inherit:
+      # As of 20230324, building this using 'env::i386-win32-gcc8' does not work yet
+      - env::mingw32
+    environment:
+      LOCAL_OPENSSL: "true"
+      LOCAL_SDL2: "true"
+    depends:
+      - planets::c2ng-bin
+    buildScript: |
+      cp "${BOB_DEP_PATHS[planets::c2ng-bin]}"/opt/c2ng/*.zip .
+    packageScript: |
+      shallowCopy "$1" .
+    multiPackage:
+      "2.41":
+        environment:
+          C2NG_REV: refs/tags/c2ng-2.41
+          AFL_REV: refs/tags/c2ng-2.41

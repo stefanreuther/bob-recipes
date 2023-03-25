@@ -52,9 +52,10 @@ multiPackage:
       doMake rule_check
       doMake
       doMake test
+      doMake install DESTDIR=result
 
     packageScript: |
-      make -C "$1" DESTDIR="$PWD" install
+      shallowCopy "$1"/result .
 
   host:
     inherit:
