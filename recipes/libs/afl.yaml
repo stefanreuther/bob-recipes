@@ -16,6 +16,8 @@ depends:
   - libs::cxxtest
   - name: libs::openssl-bin
     if: ${LOCAL_OPENSSL:-false}
+  - name: libs::zlib-bin
+    if: ${LOCAL_ZLIB:-false}
 
 provideDeps:
   - libs::openssl-bin
@@ -37,7 +39,7 @@ multiPackage:
   # Regular binary package
   bin:
     inherit: [make, buildsys]
-    buildVars: [TARGET, LOCAL_OPENSSL]
+    buildVars: [TARGET, LOCAL_OPENSSL, LOCAL_ZLIB]
     buildScript: |
       opts=(
         IN="$1"
@@ -47,6 +49,10 @@ multiPackage:
       )
       if ${LOCAL_OPENSSL:-false}; then
         opts+=(OPENSSL_DIR="${BOB_DEP_PATHS[libs::openssl-bin]}/opt/openssl")
+      fi
+      if ${LOCAL_ZLIB:-false}; then
+        opts+=(ZLIB_DIR="${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib")
+        opts+=(WITH_ZLIB=1)
       fi
       doGenerate "${opts[@]}"
       doMake rule_check

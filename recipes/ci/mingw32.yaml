@@ -10,6 +10,7 @@ inherit:
 environment:
   LOCAL_OPENSSL: "true"
   LOCAL_SDL2: "true"
+  LOCAL_ZLIB: "true"
 
 depends:
   - planets::maketurn-bin
