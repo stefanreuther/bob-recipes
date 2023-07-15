@@ -55,6 +55,7 @@ multiPackage:
       doGenerate "${opts[@]}"
       doMake
       doMake test || test "$TARGET" = Win32
+      rm -rf result
       doMake install DESTDIR=result
 
     # FIXME: right now we need to keep the shallowCopy installation.
