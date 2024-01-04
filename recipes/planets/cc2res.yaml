@@ -3,10 +3,10 @@ inherit:
   - copy
 
 checkoutSCM:
-  scm: cvs
-  cvsroot: ${CVSROOT2}
-  module: planets/cc2res
-  rev: ${PLANETS_CC2RES_REV:-HEAD}
+  scm: git
+  url: ${GITROOT}/cc2res
+  dir: .
+  rev: ${PLANETS_CC2RES_REV:-refs/heads/master}
 
 multiPackage:
   dat:
