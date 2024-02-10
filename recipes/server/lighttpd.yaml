@@ -4,8 +4,8 @@ checkoutSCM:
   #  cvsroot: ${CVSROOT}
   #  module: ext/lighttpd
   - scm: url
-    url: ${REPO_ROOT}/lighttpd-1.4.69.tar.gz
-    digestSHA1: 7fbd8d4de6d2e00e1533abf1d8b322c0b595b7bb
+    url: ${REPO_ROOT}/lighttpd-1.4.73.tar.gz
+    digestSHA1: 62c25d31a254b08af7925730e44b5436ea7bb911
     stripComponents: 1
     dir: .
 

@@ -15,8 +15,8 @@ inherit:
 
 checkoutSCM:
   - scm: url
-    url: ${REPO_ROOT}/openssl-1.1.1t.tar.gz
-    digestSHA1: a06b067b7e3bd6a2cb52a06f087ff13346ce7360
+    url: ${REPO_ROOT}/openssl-3.0.13.tar.gz
+    digestSHA1: 18b985dcd3fc0bab54cc4bfc10fa9a80ce9e345d
     stripComponents: 1
 
 # OpenSSL 1.1.1i tries to create a directory apps/include during build, which fails with
@@ -59,6 +59,7 @@ multiPackage:
 
          --openssldir=/opt/openssl/etc/ssl
          --prefix=/opt/openssl
+         --libdir=/opt/openssl/lib
 
          no-filenames
 
