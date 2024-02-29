@@ -1,6 +1,7 @@
 # cc2res (PCC2 resources)
 inherit:
   - copy
+  - make
 
 checkoutSCM:
   scm: git
@@ -19,8 +20,8 @@ multiPackage:
     buildTools: [stargen]
 
     buildScript: |
-      perl ${BOB_DEP_PATHS[tools::buildsys]}/Make.pl IN=$1 RESULT=result OUT=. STARGEN=stargen
-      make install
+      perl ${BOB_DEP_PATHS[tools::buildsys]}/Make.pl IN=$1 RESULT=result OUT=. STARGEN=stargen C2NG=${BOB_DEP_PATHS[planets::c2ng-host]}/opt/c2ng/bin
+      doMake install
 
     packageScript: |
       shallowCopy "$1"/result .
