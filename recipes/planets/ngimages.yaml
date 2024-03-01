@@ -1,0 +1,12 @@
+#
+#  Starship model resource file for PCC1
+#
+
+depends:
+  - planets::cc2res-dat
+
+buildScript: |
+  cp "${BOB_DEP_PATHS[planets::cc2res-dat]}/pcc1/ngimages.zip" .
+
+packageScript: |
+  cp "$1/ngimages.zip" .

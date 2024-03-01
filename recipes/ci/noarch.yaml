@@ -21,6 +21,7 @@ depends:
   - planets::website-daily-dat
   - planets::website-dev
   - planets::c2systest
+  - planets::ngimages
 
 buildScript: "true"
 packageScript: "true"

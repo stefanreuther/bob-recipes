@@ -1,0 +1,26 @@
+#
+#  ngimages release
+#
+
+root: true
+
+multiPackage:
+  v1:
+    environment:
+      PLANETS_CC2RES_REV: refs/tags/pcc_20240229
+      OUTPUT_FILE: ngimages.zip
+    depends:
+      - planets::ngimages
+
+inherit:
+  - copy
+  - env::native-gcc
+
+buildVars:
+  - OUTPUT_FILE
+
+buildScript: |
+  cp "${BOB_DEP_PATHS[planets::ngimages]}/ngimages.zip" ${OUTPUT_FILE}
+
+packageScript: |
+  shallowCopy "$1" .
