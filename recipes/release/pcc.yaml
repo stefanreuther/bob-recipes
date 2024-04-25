@@ -27,10 +27,15 @@ multiPackage:
     environment:
       # PCC_VERSION = file name component
       PCC_VERSION: "1120"
-      # DOS_PLANETS_REV = CVS tag
+      # DOS_PLANETS_REV = CVS tag in 'planets' repository
       DOS_PLANETS_REV: "cc_1_1_20"
 
   1.1.21:
     environment:
       PCC_VERSION: "1121"
       DOS_PLANETS_REV: "cc_1_1_21"
+
+  1.1.22:
+    environment:
+      PCC_VERSION: "1122"
+      DOS_PLANETS_REV: "cc_1_1_22"
