@@ -108,8 +108,8 @@ multiPackage:
   #  website-release: release build from tagged versions
   #
   #  Provide
-  #    PLANETS_JS_REV           // should have the form pcc_<date>
-  #    PLANETS_C2WEB_REV        // should have the form pcc_<date>
+  #    PLANETS_JS_REV           // should have the form refs/heads/pcc_<date>
+  #    PLANETS_C2WEB_REV        // should have the form refs/heads/pcc_<date>
   #    PLANETS_CC2RES_REV
   #
   release:
@@ -127,8 +127,8 @@ multiPackage:
     buildScript: |
       rm -rf *
       perl $1/install.pl \
-           -DLIB_VERSION=".${PLANETS_JS_REV/pcc_}" \
-           -DC2W_VERSION=".${PLANETS_JS_REV/pcc_}" \
+           -DLIB_VERSION=".${PLANETS_JS_REV/*pcc_}" \
+           -DC2W_VERSION=".${PLANETS_JS_REV/*pcc_}" \
            -DUSER_VERSION="${PLANETS_C2WEB_REV/pcc_}" \
            -DC2CONFIG=/srv/config/c2config.txt \
            --cgi="$1" \

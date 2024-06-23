@@ -7,7 +7,7 @@ root: true
 multiPackage:
   "20191123":
     environment:
-      PLANETS_JS_REV:       pcc_20191123
+      PLANETS_JS_REV:       refs/tags/pcc_20191123
       PLANETS_C2WEB_REV:    pcc_20191123
       PLANETS_CC2RES_REV:   refs/tags/pcc_20191123
     depends:
@@ -15,7 +15,7 @@ multiPackage:
 
   "20200221":
     environment:
-      PLANETS_JS_REV:       pcc_20200221
+      PLANETS_JS_REV:       refs/tags/pcc_20200221
       PLANETS_C2WEB_REV:    pcc_20200221
       PLANETS_CC2RES_REV:   refs/tags/pcc_20200221
     depends:
@@ -23,7 +23,7 @@ multiPackage:
 
   "20200308":
     environment:
-      PLANETS_JS_REV:       pcc_20200221
+      PLANETS_JS_REV:       refs/tags/pcc_20200221
       PLANETS_C2WEB_REV:    pcc_20200308
       PLANETS_CC2RES_REV:   refs/tags/pcc_20200221
     depends:
@@ -31,7 +31,7 @@ multiPackage:
 
   "20200329":
     environment:
-      PLANETS_JS_REV:       pcc_20200329
+      PLANETS_JS_REV:       refs/tags/pcc_20200329
       PLANETS_C2WEB_REV:    pcc_20200329
       PLANETS_CC2RES_REV:   refs/tags/pcc_20200329
     depends:
@@ -39,7 +39,7 @@ multiPackage:
 
   "20200802":
     environment:
-      PLANETS_JS_REV:       pcc_20200802
+      PLANETS_JS_REV:       refs/tags/pcc_20200802
       PLANETS_C2WEB_REV:    pcc_20200802
       PLANETS_CC2RES_REV:   refs/tags/pcc_20200802
     depends:
@@ -47,7 +47,7 @@ multiPackage:
 
   "20210531":
     environment:
-      PLANETS_JS_REV:       pcc_20210531
+      PLANETS_JS_REV:       refs/tags/pcc_20210531
       PLANETS_C2WEB_REV:    pcc_20210531
       PLANETS_CC2RES_REV:   refs/tags/pcc_20210531
     depends:
@@ -55,7 +55,7 @@ multiPackage:
 
   "20210712":
     environment:
-      PLANETS_JS_REV:       pcc_20210712
+      PLANETS_JS_REV:       refs/tags/pcc_20210712
       PLANETS_C2WEB_REV:    pcc_20210712
       PLANETS_CC2RES_REV:   refs/tags/pcc_20210531
     depends:
@@ -63,7 +63,7 @@ multiPackage:
 
   "20211024":
     environment:
-      PLANETS_JS_REV:       pcc_20211024
+      PLANETS_JS_REV:       refs/tags/pcc_20211024
       PLANETS_C2WEB_REV:    pcc_20211024
       PLANETS_CC2RES_REV:   refs/tags/pcc_20211024
     depends:
@@ -71,7 +71,7 @@ multiPackage:
 
   "20211220":
     environment:
-      PLANETS_JS_REV:       pcc_20211220
+      PLANETS_JS_REV:       refs/tags/pcc_20211220
       PLANETS_C2WEB_REV:    pcc_20211220
       PLANETS_CC2RES_REV:   refs/tags/pcc_20211220
     depends:
@@ -79,7 +79,7 @@ multiPackage:
 
   "20221217":
     environment:
-      PLANETS_JS_REV:       pcc_20221217
+      PLANETS_JS_REV:       refs/tags/pcc_20221217
       PLANETS_C2WEB_REV:    pcc_20221217
       PLANETS_CC2RES_REV:   refs/tags/pcc_20221217
     depends:
@@ -87,7 +87,7 @@ multiPackage:
 
   "20230715":
     environment:
-      PLANETS_JS_REV:       pcc_20230715
+      PLANETS_JS_REV:       refs/tags/pcc_20230715
       PLANETS_C2WEB_REV:    pcc_20230715
       PLANETS_CC2RES_REV:   refs/tags/pcc_20221217
     depends:
@@ -95,7 +95,7 @@ multiPackage:
 
   "20240229":
     environment:
-      PLANETS_JS_REV:       pcc_20240229
+      PLANETS_JS_REV:       refs/tags/pcc_20240229
       PLANETS_C2WEB_REV:    pcc_20240229
       PLANETS_CC2RES_REV:   refs/tags/pcc_20240229
     depends:

@@ -6,10 +6,17 @@ inherit:
   - copy
 
 checkoutSCM:
-  scm: cvs
-  cvsroot: ${CVSROOT}
-  module: js
-  rev: ${PLANETS_JS_REV:-HEAD}
+  # Old:
+  # scm: cvs
+  # cvsroot: ${CVSROOT}
+  # module: js
+  # rev: ${PLANETS_JS_REV:-HEAD}
+
+  # New, since 2.40.10:
+  scm: git
+  url: ${GITROOT}/js
+  dir: .
+  rev: ${PLANETS_JS_REV:-refs/heads/master}
 
 multiPackage:
   pcc-dat:
