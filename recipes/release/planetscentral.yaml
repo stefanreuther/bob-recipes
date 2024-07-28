@@ -17,6 +17,28 @@ multiPackage:
     packageScript: |
       shallowCopy "$1" .
 
+  pkg:
+    inherit:
+      - env::amd64-linux-gcc49
+      - copy
+    depends:
+      - release::planetscentral-bin
+      - name: tools::statfake-host
+        use: [tools]
+    buildTools:
+      - statfake
+    buildScript: |
+      rm -rf dist
+      mkdir dist dist/DEBIAN
+      shallowCopy "${BOB_DEP_PATHS[release::planetscentral-bin]}" dist/
+      ( echo "Package: planetscentral-pkg"
+        echo "Version: $(date +%Y%m%d)"
+        echo "Maintainer: Stefan Reuther <streu@gmx.de>"
+        echo "Architecture: amd64"
+        echo "Description: Package for PlanetsCentral" ) > dist/DEBIAN/control
+      statfake dpkg-deb -b dist .
+    packageScript: |
+      cp $1/*.deb .
 
   # Test it: test the programs built using the sandbox
   # FIXME: use a website release
