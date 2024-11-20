@@ -1,3 +1,5 @@
+bobMinimumVersion: "0.19"
+
 policies:
   cleanEnvironment: true
   relativeIncludes: true
@@ -10,3 +12,5 @@ policies:
   scmIgnoreUser: true
   sandboxFingerprints: false
   noUndefinedTools: false
+  gitCommitOnBranch: true
+  defaultFileMode: true
