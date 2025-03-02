@@ -20,7 +20,7 @@ packageScript: |
   cat >>bin/winerunner <<'EOF'
   #!/bin/bash
 
-  WINEPATH=/usr/lib/gcc/i686-w64-mingw32/4.9-win32
+  WINEPATH=/usr/lib/gcc/i686-w64-mingw32/12-win32
 
   check() {
     if test -f "$2"; then
@@ -35,7 +35,9 @@ packageScript: |
   done
 
   export WINEPATH
-  wine32 "$@"
+  exe=$1; shift
+  if test -f "$exe.exe"; then exe="$exe.exe"; fi
+  wine "$exe" "$@"
   EOF
   chmod +x bin/winerunner
 

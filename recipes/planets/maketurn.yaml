@@ -15,7 +15,7 @@ multiPackage:
 
     packageScript: |
       mkdir -p bin
-      cp "$1/maketurn" bin/
+      cp "$1/maketurn" bin/ || cp "$1/maketurn.exe" bin/
 
   doc:
     buildScript: |
