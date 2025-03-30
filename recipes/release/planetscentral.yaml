@@ -45,6 +45,7 @@ multiPackage:
   # FIXME: where to get planetscentral-programs from?
   test:
     inherit:
+      - copy
       - env::native-gcc
     depends:
       - release::planetscentral-bin
@@ -62,11 +63,18 @@ multiPackage:
 
     # Try to test against built redis-server, not respserver.
     buildScript: |
+      # Make a copy of website-daily-dat, and undo the hard-coding of C2CONFIG.
+      rm -rf install
+      mkdir -p install
+      deepCopy "${BOB_DEP_PATHS[planets::website-daily-dat]}" install
+      perl -i -pe 's/^\$ENV\{C2CONFIG\}.*;//' install/*.pm
+      website=$PWD/install
+
       cd "$1/c2systest"
       unshare -r -n perl test.pl -Dinitcommand='/sbin/ifconfig lo up' \
                    -Dc2ng="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/c2ng/bin" \
                    -Drespserver.path="${BOB_DEP_PATHS[release::planetscentral-bin]}/opt/redis/bin/redis-server" \
-                   -Dc2web="${BOB_DEP_PATHS[planets::website-daily-dat]}" \
+                   -Dc2web="$website" \
                    -Dprograms=../pcc-programs
 
     packageScript: |
