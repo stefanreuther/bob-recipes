@@ -54,7 +54,7 @@ multiPackage:
 
       doGenerate "${opts[@]}"
       doMake
-      doMake test || test "$TARGET" = Win32
+      doMake test || ( test "$TARGET" = Win32 && echo "Test failure ignored for Windows for now." >&2 )
       rm -rf result
       doMake install DESTDIR=result
 

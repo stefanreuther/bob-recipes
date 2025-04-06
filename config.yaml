@@ -10,7 +10,6 @@ policies:
   sandboxInvariant: true
   tidyUrlScm: true
   scmIgnoreUser: true
-  sandboxFingerprints: false
   noUndefinedTools: false
   gitCommitOnBranch: true
   defaultFileMode: true
