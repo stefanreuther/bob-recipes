@@ -1,0 +1,80 @@
+#
+#  SDL_image
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/SDL_image-1.2.10.tar.gz
+  digestSHA1: 6bae71fdfd795c3dbf39f6c7c0cf8b212914ef97
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    depends:
+      - libs::sdl-bin
+      - libs::libpng12-bin
+      - libs::libjpeg-bin
+    provideDeps:
+      - libs::sdl-bin
+      - libs::libpng12-bin
+      - libs::libjpeg-bin
+    buildScript: |
+      cflags=(
+        $CFLAGS
+
+        # Disable warnings that I've seen with SDL_image-1.2.10
+        -Wno-unused
+        -Wno-unused-parameter
+        -Wno-misleading-indentation
+        -Wno-implicit-fallthrough
+        -Wno-sign-compare
+        -Wno-incompatible-pointer-types
+        -fno-strict-aliasing
+
+        # Manually forward dependencies' includes
+        -I"${BOB_DEP_PATHS[libs::libjpeg-bin]}/opt/libjpeg/include"
+        -I"${BOB_DEP_PATHS[libs::libpng12-bin]}/opt/libpng12/include"
+        -I"${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/include"
+      )
+      CFLAGS="${cflags[@]}"
+
+      ldflags=(
+        $LDFLAGS
+
+        # Manually forward dependencies' libs
+        -L"${BOB_DEP_PATHS[libs::libjpeg-bin]}/opt/libjpeg/lib"
+        -L"${BOB_DEP_PATHS[libs::libpng12-bin]}/opt/libpng12/lib"
+        -L"${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/lib"
+      )
+      LDFLAGS="${ldflags[@]}"
+
+      # Manually force libpng link; do not use pkg-config (that would use the host's version)
+      # (That aside, code is hardwired to do -lpng.)
+      export PKG_CONFIG=false
+
+      opts=(
+        --disable-gif
+        --disable-lbm
+        --disable-pcx
+        --disable-pnm
+        --disable-tga
+        --disable-tif
+        --disable-xcf
+        --disable-xpm
+        --disable-xv
+        --with-sdl-prefix="${BOB_DEP_PATHS[libs::sdl-bin]}/opt/sdl"
+      )
+
+      $1/configure --prefix=/opt/sdlimage --host=$($CC -dumpmachine) "${opts[@]}"
+      doMake
+
+      rm -rf dist
+      mkdir dist
+      make DESTDIR=$PWD/dist install
+
+    packageScript: |
+      shallowCopy "$1/dist" .
+      rm -f opt/sdlimage/lib/*.la

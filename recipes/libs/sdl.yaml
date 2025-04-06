@@ -1,0 +1,27 @@
+#
+#  SDL
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/SDL-1.2.14.tar.gz
+  digestSHA1: ba625b4b404589b97e92d7acd165992debe576dd
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    buildScript: |
+      CFLAGS="$CFLAGS -Wno-unused-parameter -Wno-sign-compare -Wno-implicit-fallthrough -fpermissive -DNONAMELESSUNION"
+      $1/configure --prefix=/opt/sdl --host=$($CC -dumpmachine) --disable-video-opengl
+      doMake
+
+      rm -rf dist
+      mkdir dist
+      make DESTDIR=$PWD/dist install
+
+    packageScript: |
+      shallowCopy "$1/dist" .
+      rm -f opt/sdl2/lib/*.la

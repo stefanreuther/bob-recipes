@@ -17,6 +17,19 @@ multiPackage:
   bin:
     buildVars: [TARGET]
     buildScript: |
+      case "$TARGET" in
+        *Win*)
+          # By default, this spits out a "libz.so.1.2.13", and also sets the internal name
+          # (what would be the soname in ELF) to "libz.so.1.2.13", which causes binaries
+          # that look for it refer to that name, even if we explicitly linked against a
+          # copy name "libz.dll". This causes the file to have the proper name:
+          #    -rw-r--r-- 1 stefan stefan 100464 Apr  6 20:39 libz.a
+          #    -rwxr-xr-x 1 stefan stefan 292864 Apr  6 20:39 libz.dll
+          #    lrwxrwxrwx 1 stefan stefan      8 Apr  6 20:39 libz.so -> libz.dll
+          #    lrwxrwxrwx 1 stefan stefan      8 Apr  6 20:39 libz.so.1 -> libz.dll
+          export SHAREDLIBV=libz.dll
+          ;;
+      esac
       CHOST=${CROSS_COMPILE%-} prefix=/opt/zlib $1/configure
       doMake
 
@@ -24,11 +37,3 @@ multiPackage:
       out=$PWD
       make -C $1 DESTDIR=$out install
       rm -f opt/zlib/lib/*.la
-
-      # zlib's build process does not automatically adapt to Windows conventions.
-      # Whack it right manually.
-      case "$TARGET" in
-        *Win*)
-          cp -L opt/zlib/lib/libz.so opt/zlib/lib/libz.dll
-          ;;
-      esac

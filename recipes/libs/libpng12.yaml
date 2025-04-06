@@ -1,0 +1,36 @@
+#
+#  libpng-1.2
+#
+#  Installs to /opt/libpng12
+#
+#  Used for legacy (libSDL) build. Later versions change the API (struct png_info_def becoming opaque).
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/libpng-1.2.59.tar.gz
+  digestSHA1: 6debaeea473a4a9e8b53ad203b8b14399a14f437
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    depends:
+      - libs::zlib-bin
+    provideDeps:
+      - libs::zlib-bin
+    buildVars: [TARGET]
+    buildScript: |
+      export ZLIBINC=${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/include
+      export ZLIBLIB=${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib/lib
+      export CPPFLAGS="-I$ZLIBINC ${CPPFLAGS:-}"
+      export LDFLAGS="-L$ZLIBLIB ${LDFLAGS:-}"
+      export CFLAGS="-Wno-implicit-fallthrough ${CFLAGS:-}"
+      $1/configure --prefix=/opt/libpng12 --host=$($CC -dumpmachine)
+      doMake
+
+    packageScript: |
+      make -C $1 DESTDIR=$PWD install
+      rm -f opt/libpng12/lib/*.la

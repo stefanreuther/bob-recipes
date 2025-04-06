@@ -15,11 +15,14 @@ environment:
 depends:
   - planets::maketurn-bin
   - libs::openssl-bin
+  - libs::sdl-bin
   - libs::sdl2-bin
   - libs::afl-bin
   - libs::zlib-bin
   - libs::libpng-bin
+  - libs::libpng12-bin
   - libs::libjpeg-bin
+  - libs::sdlimage-bin
   - libs::sdl2image-bin
   - planets::c2ng-bin
 
