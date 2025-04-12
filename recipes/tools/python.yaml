@@ -1,7 +1,7 @@
 #
 #  Python
 #
-#  Installs to /opt/libpng
+#  Installs to /opt/python
 #
 
 inherit: [make, copy]
@@ -27,3 +27,6 @@ multiPackage:
 
     packageScript: |
       shallowCopy "$1/dist" .
+      ln -sf python3 opt/python/bin/python
+    provideTools:
+      python: "opt/python/bin"

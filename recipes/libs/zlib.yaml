@@ -37,3 +37,14 @@ multiPackage:
       out=$PWD
       make -C $1 DESTDIR=$out install
       rm -f opt/zlib/lib/*.la
+
+  # Windows package: produces a Windows package, no matter what environment is being used
+  win-bin:
+    inherit:
+      - env::i386-win32-gcc8
+    depends:
+      - libs::zlib-bin
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[libs::zlib-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .

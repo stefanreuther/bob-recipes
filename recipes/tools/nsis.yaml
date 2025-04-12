@@ -1,0 +1,74 @@
+#
+#  Nullsoft Installer
+#
+
+inherit: [copy]
+
+depends:
+  - libs::zlib-win-bin
+  - name: tools::scons
+    use: [tools]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/nsis-3.08-src.tar.bz2
+  digestSHA1: 784061fd42bf5e838e40e9f4504fd3e696d5d9a1
+  stripComponents: 1
+  dir: .
+
+buildTools:
+  - scons
+
+buildVars: [CC, CXX]
+
+buildScript: |
+  # Get source
+  rm -rf src
+  mkdir src
+  shallowCopy "$1" src
+
+  # Get zlib
+  ZLIB="${BOB_DEP_PATHS[libs::zlib-win-bin]}/opt/zlib"
+  rm -rf zlib
+  mkdir zlib zlib/include zlib/lib
+  cp $ZLIB/lib/libz.dll zlib/zlib1.dll
+  cp $ZLIB/lib/libz.a zlib/lib/zdll.lib
+  cp $ZLIB/include/* zlib/include/
+
+  # Build
+  #   I got build errors when building parallel; thus, build single-threaded for now.
+  rm -rf dist
+  mkdir dist
+  scons -C src \
+     SKIPUTILS="NSIS Menu" \
+     ZLIB_W32=$PWD/zlib \
+     CC="$CC" \
+     CXX="$CXX" \
+     APPEND_CCFLAGS="-Wno-dangling-pointer -Wno-deprecated-declarations -Wno-misleading-indentation -Wno-maybe-uninitialized -Wno-unused-value" \
+     PREFIX=$PWD/dist \
+     install
+
+packageScript: |
+  shallowCopy "$1/dist" .
+
+multiPackage:
+  #
+  #  nsis-native: build in whatever environment provided to us (i.e. native).
+  #  Environment must provide python and mingw compilers, but be configured for native.
+  #
+  native: {}
+
+  #
+  #  nsis-win32: force sandboxed MinGW environment.
+  #  This builds the same binary independent of the current environment.
+  #
+  win32:
+    depends:
+      - name: toolchain::i386-win32-gcc8
+        use: [tools]
+      - name: tools::python-host
+        use: [tools]
+    buildTools: [compiler, python]
+    environment:
+      CC: "gcc-4.9"
+      CXX: "g++-4.9"

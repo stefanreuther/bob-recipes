@@ -1,0 +1,23 @@
+#
+#  SCons
+#
+#  For now, just install from the "local install" version
+#
+
+inherit: [copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/scons-local-4.4.0.tar.gz
+  digestSHA1: 5321164cb4219a40088b12976894e3033ca22617
+  dir: .
+
+buildScript: |
+  shallowCopy "$1" .
+
+packageScript: |
+  shallowCopy "$1" .
+  ln -s scons.py scons
+
+provideTools:
+  scons: .

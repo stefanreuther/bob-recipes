@@ -81,47 +81,74 @@ multiPackage:
       statfake dpkg-deb -b packaging .
       rm -rf install.log packaging
 
-#   # Coverage
-#   cov:
-#     root: true
-#     inherit: [coverage]
-#     buildScript: |
-#       # Fetch and set up source
-#       deepCopy "$1" .
-#       cd pcc-v2
-#       ln -s ../cpluslib
-#
-#       # Build with coverage enabled
-#       ./configure LDFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-O0 -fprofile-arcs -ftest-coverage"
-#       make -j4 CXXTESTDIR=$2 testsuite
-#
-#       # Initialize
-#       coverage_init
-#
-#       # Run tests (generates *.gcda)
-#       ./testsuite
-#
-#       # Create coverage
-#       coverage_create PCC2 "$PWD/arch/*" "$PWD/client/*" "$PWD/flak/*" "$PWD/game/*" "$PWD/gfx/*" "$PWD/int/*" "$PWD/io/*" "$PWD/resmgr/*" "$PWD/sound/*" "$PWD/ui/*" "$PWD/util/*"
-#
-#     packageScript: |
-#       shallowCopy "$1/pcc-v2/coverage_report" .
-#
+  # Windows package
+  # This basically reproduces the build_dist_windows script, but with updated dependencies
+  win-pkg:
+    depends:
+      - libs::sdl-bin
+      - libs::sdlimage-bin
+      - libs::zlib-bin
+      - tools::nsis-win32
+    buildVars: [AR, CC, CXX, RANLIB, STRIP, SYSROOT]
+    buildScript: |
+      # Paths
+      SDL=${BOB_DEP_PATHS[libs::sdl-bin]}/opt/sdl
+      SDLIMAGE=${BOB_DEP_PATHS[libs::sdlimage-bin]}/opt/sdlimage
+      ZLIB=${BOB_DEP_PATHS[libs::zlib-bin]}/opt/zlib
+      NSIS=${BOB_DEP_PATHS[tools::nsis-win32]}
 
-#   # PCC2 doc. This is a subset of any binary distribution.
-#   doc:
-#     root: true
-#     buildScript: |
-#       # Fetch and set up source
-#       deepCopy "$1" .
-#       cd pcc-v2
-#       ln -s ../cpluslib
-#
-#       # Build
-#       ./configure
-#       make LC_ALL=en_US.UTF-8 manual
-#       make LC_ALL=en_US.UTF-8 -C doc
-#     packageScript: |
-#       cp "$1/pcc-v2/doc/pcc2help.html" .
-#       cp "$1/pcc-v2/doc/pcc2interpreter.html" .
+      # Fetch and set up source
+      deepCopy "$1" .
+      cd pcc-v2
+      ln -sf ../cpluslib
 
+      # Configure
+      cp arch/win32-mingw/acdefs.h .
+
+      cat >acdefs.mak <<EOF
+      AC_CXXFLAGS = -DWIN32 -O -I$SDL/include/SDL -I$SDLIMAGE/include/SDL -I$ZLIB/include -Wno-deprecated-declarations
+      AC_LIBS = $SDL/lib/libSDL.dll.a $SDLIMAGE/lib/libSDL_image.dll.a $ZLIB/lib/libz.dll -luser32 -lkernel32 -lgdi32
+      AC_LDFLAGS =
+
+      # Programs
+      AR = $AR
+      CC = $CC
+      CXX = $CXX
+      RANLIB = $RANLIB
+      STRIP = $STRIP
+      PERL = perl
+      HAVE_SDL = yes
+      HAVE_PDK = no
+
+      # This assumes a Unix-style 'rm' program is present:
+      RM = rm -f
+      EOF
+
+      echo '#include "arch/win32-bcc55/platform.h"' > arch/platform.h
+
+      # Build
+      doMake -f Makefile.min
+
+      # Determine path for potential DLLs.
+      # NSIS's directory structure confuses prepare3.pl, so filter that out.
+      DLL_PATH="${SYSROOT}"
+      for i in "${!BOB_ALL_PATHS[@]}"; do
+        case "$i" in
+          tools::nsis*)
+            ;;
+          *)
+            DLL_PATH="${DLL_PATH} ${BOB_ALL_PATHS[$i]}"
+            ;;
+        esac
+      done
+      export DLL_PATH
+
+      # Build installer
+      cd installer
+      perl prepare3.pl script >PCC2-files.nsh
+      perl convert.pl PCC2-Installer.nsi PCC2-Installer-utf8.nsi
+      NSISDIR=$NSIS/share/nsis $NSIS/bin/makensis PCC2-Installer-utf8.nsi
+
+    packageScript: |
+      cp $1/pcc-v2/installer/PCC2-Installer.exe .
+      cp $1/pcc-v2/installer/filelist.txt .

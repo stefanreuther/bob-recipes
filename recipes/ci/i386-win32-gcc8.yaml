@@ -1,5 +1,5 @@
 #
-#  Local MinGW32 CI build
+#  Sandboxed MinGW32 CI build
 #
 
 root: true
@@ -8,9 +8,11 @@ inherit:
   - env::i386-win32-gcc8
 
 depends:
-#  - planets::maketurn-bin
-#  - libs::afl-bin
   - libs::openssl-bin
+  - libs::sdl-bin
+  - libs::sdlimage-bin
+  - planets::pcc2-win-pkg
+  - tools::nsis-win32
 
 buildScript: "true"
 packageScript: "true"
