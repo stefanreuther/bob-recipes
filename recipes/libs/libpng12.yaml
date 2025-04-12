@@ -30,7 +30,10 @@ multiPackage:
       export CFLAGS="-Wno-implicit-fallthrough ${CFLAGS:-}"
       $1/configure --prefix=/opt/libpng12 --host=$($CC -dumpmachine)
       doMake
+      rm -rf dist
+      mkdir dist
+      make DESTDIR=$PWD/dist install
 
     packageScript: |
-      make -C $1 DESTDIR=$PWD install
+      shallowCopy "$1/dist" .
       rm -f opt/libpng12/lib/*.la
