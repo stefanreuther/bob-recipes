@@ -5,6 +5,7 @@
 #  For use with utilities that are needed during the build process
 #
 environment:
+  AR: ${HOSTAR}
   CC: ${HOSTCC}
   CXX: ${HOSTCXX}
   CFLAGS: ${HOSTCFLAGS}
@@ -14,3 +15,5 @@ environment:
   TARGET: "POSIX"
   RUN: ""
   SYSROOT: ""
+  RANLIB: ${HOSTRANLIB}
+  STRIP: ${HOSTSTRIP}

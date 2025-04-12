@@ -2,6 +2,7 @@
 #  Environment: MinGW gcc on AMD64 Linux
 #
 environment:
+  AR: i686-w64-mingw32-ar
   CC: i686-w64-mingw32-gcc
   CXX: i686-w64-mingw32-g++
   CFLAGS: -O2 -W -Wall
@@ -11,12 +12,17 @@ environment:
   SYSROOT: /usr/lib/gcc/i686-w64-mingw32/4.9-win32
   CROSS_COMPILE: i686-w64-mingw32-
   TARGET: Win32
+  RANLIB: i686-w64-mingw32-ranlib
+  STRIP: i686-w64-mingw32-strip
 
+  HOSTAR: ar
   HOSTCC: gcc-4.9
   HOSTCXX: g++-4.9
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""
+  HOSTRANLIB: ranlib
+  HOSTSTRIP: strip
 
 depends:
   - name: toolchain::amd64-linux-gcc49

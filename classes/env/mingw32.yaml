@@ -2,6 +2,7 @@
 #  Environment: MinGW32 native installation
 #
 environment:
+  AR: i686-w64-mingw32-ar
   CC: i686-w64-mingw32-gcc
   CXX: i686-w64-mingw32-g++
   CFLAGS: -O2 -W -Wall
@@ -11,12 +12,17 @@ environment:
   SYSROOT: /usr/lib/gcc/i686-w64-mingw32/12-win32
   CROSS_COMPILE: i686-w64-mingw32-
   TARGET: Win32
+  RANLIB: i686-w64-mingw32-ranlib
+  STRIP: i686-w64-mingw32-strip
 
+  HOSTAR: ar
   HOSTCC: gcc
   HOSTCXX: g++
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""
+  HOSTRANLIB: ranlib
+  HOSTSTRIP: strip
 
 depends:
   - name: toolchain::mingw32

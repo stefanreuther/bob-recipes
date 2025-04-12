@@ -2,6 +2,7 @@
 #  Environment: Native gcc 32-bit
 #
 environment:
+  AR: ar
   CC: gcc -m32
   CXX: g++ -m32
   CFLAGS: -O2 -W -Wall
@@ -11,9 +12,14 @@ environment:
   SYSROOT: ""
   CROSS_COMPILE: ""
   TARGET: POSIX
+  RANLIB: ranlib
+  STRIP: strip
 
+  HOSTAR: ar
   HOSTCC: gcc -m32
   HOSTCXX: g++ -m32
   HOSTCFLAGS: -O2 -W -Wall
   HOSTCXXFLAGS: -O2 -W -Wall
   HOSTLDFLAGS: ""
+  HOSTRANLIB: ranlib
+  HOSTSTRIP: strip

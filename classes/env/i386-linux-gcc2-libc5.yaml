@@ -2,6 +2,7 @@
 #  Environment: i386, gcc-2.7, sandbox (Debian 3)
 #
 environment:
+  AR: ar
   CC: /usr/i486-linuxlibc1/bin/gcc
   CXX: /usr/i486-linuxlibc1/bin/g++
   CFLAGS: -O2 -W -Wall -static
@@ -11,12 +12,17 @@ environment:
   SYSROOT: ""
   CROSS_COMPILE: ""
   TARGET: POSIX
+  RANLIB: ranlib
+  STRIP: strip
 
+  HOSTAR: ar
   HOSTCC: /usr/i486-linuxlibc1/bin/gcc
   HOSTCXX: /usr/i486-linuxlibc1/bin/g++
   HOSTCFLAGS: -O2 -W -Wall -static
   HOSTCXXFLAGS: -O2 -W -Wall -static
   HOSTLDFLAGS: -static
+  HOSTRANLIB: ranlib
+  HOSTSTRIP: strip
 
 depends:
   - name: toolchain::i386-linux
