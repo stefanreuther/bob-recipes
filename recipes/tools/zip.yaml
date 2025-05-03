@@ -1,0 +1,37 @@
+#
+#  Zip
+#
+#  Installs to /opt/zip
+#
+
+inherit: [make, copy]
+
+checkoutSCM:
+  scm: url
+  url: ${REPO_ROOT}/zip_3.0.orig.tar.gz
+  digestSHA1: c9f4099ecf2772b53c2dd4a8e508064ce015d182
+  stripComponents: 1
+  dir: .
+
+multiPackage:
+  bin:
+    buildScript: |
+      shallowCopy "$1" .
+      doMakeDefault -f unix/Makefile generic
+
+      rm -rf dist
+      doMakeDefault -f unix/Makefile prefix=dist/opt/zip install
+    packageScript: |
+      shallowCopy "$1/dist" .
+
+  host:
+    inherit:
+      - env::host
+    depends:
+      - tools::zip-bin
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[tools::zip-bin]}" .
+    packageScript: |
+      shallowCopy "$1" .
+    provideTools:
+      zip: "opt/zip/bin"
