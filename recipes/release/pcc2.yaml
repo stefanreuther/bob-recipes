@@ -66,3 +66,21 @@ multiPackage:
         environment:
           PCC2_REV: release_2_0_16
           CPLUSLIB_REV: release_2_0_8
+      2.0.17:
+        environment:
+          PCC2_REV: release_2_0_17
+          CPLUSLIB_REV: release_2_0_17
+  windows:
+    inherit:
+      - env::i386-win32-gcc8
+    depends:
+      - planets::pcc2-win-pkg
+    buildScript: |
+      shallowCopy "${BOB_DEP_PATHS[planets::pcc2-win-pkg]}" .
+    packageScript: |
+      shallowCopy "$1" .
+    multiPackage:
+      2.0.17:
+        environment:
+          PCC2_REV: release_2_0_17
+          CPLUSLIB_REV: release_2_0_17

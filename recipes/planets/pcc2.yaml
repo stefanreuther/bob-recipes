@@ -89,7 +89,11 @@ multiPackage:
       - libs::sdlimage-bin
       - libs::zlib-bin
       - tools::nsis-win32
+      - name: tools::zip-host
+        use: [tools]
     buildVars: [AR, CC, CXX, RANLIB, STRIP, SYSROOT]
+    buildTools:
+      - zip
     buildScript: |
       # Paths
       SDL=${BOB_DEP_PATHS[libs::sdl-bin]}/opt/sdl
@@ -149,6 +153,13 @@ multiPackage:
       perl convert.pl PCC2-Installer.nsi PCC2-Installer-utf8.nsi
       NSISDIR=$NSIS/share/nsis $NSIS/bin/makensis PCC2-Installer-utf8.nsi
 
+      # Build zip
+      rm -rf testdir
+      perl prepare3.pl install testdir
+      cd testdir
+      zip -rp9 ../pcc2-win32.zip *
+
     packageScript: |
       cp $1/pcc-v2/installer/PCC2-Installer.exe .
+      cp $1/pcc-v2/installer/pcc2-win32.zip .
       cp $1/pcc-v2/installer/filelist.txt .
