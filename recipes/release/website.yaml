@@ -117,6 +117,14 @@ multiPackage:
     depends:
       - planets::website-release
 
+  "20250810":
+    environment:
+      PLANETS_JS_REV:       refs/tags/pcc_20250810
+      PLANETS_C2WEB_REV:    pcc_20250810
+      PLANETS_CC2RES_REV:   refs/tags/pcc_20250810
+    depends:
+      - planets::website-release
+
 inherit:
   - copy
   - env::native-gcc
