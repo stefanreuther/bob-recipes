@@ -12,6 +12,7 @@ depends:
   - libs::afl-cov
   - libs::pcre8-bin
   - libs::openssl-bin
+  - planets::badlands-bin
   - planets::c2ng-bin
   - planets::c2ng-cov
   - planets::cmlimit-bin
