@@ -16,6 +16,7 @@ depends:
   - planets::c2ng-bin
   - planets::c2ng-cov
   - planets::cmlimit-bin
+  - planets::ddmaster-bin
   - planets::lisp-bin
   - planets::maketurn-bin
   - planets::mfq-bin
