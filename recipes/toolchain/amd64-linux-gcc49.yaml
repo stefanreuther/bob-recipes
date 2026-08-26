@@ -30,6 +30,7 @@ buildScript: |
      file                     # required by some configure scripts to figure out the object file format
      libc-bin                 # provides ldconfig
      m4                       # required by some configure scripts
+     zip unzip
   )
   perl "${BOB_DEP_PATHS[tools::depacker]}/depacker.pl" --list-file="${REPO_ROOT}/amd64-linux-gcc49/*.deb" --install=. ${packages[@]}
 

@@ -12,6 +12,9 @@ depends:
   - libs::sdl-bin
   - libs::sdlimage-bin
   - planets::pcc2-win-pkg
+  - name: planets::phost-pkg
+    environment:
+      PHOST_TARGET: win32
   - tools::nsis-win32
 
 buildScript: "true"
