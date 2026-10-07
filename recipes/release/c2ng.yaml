@@ -43,3 +43,7 @@ multiPackage:
         environment:
           C2NG_REV: refs/tags/c2ng-2.41.4
           AFL_REV: refs/tags/c2ng-2.41.4
+      "2.41.5":
+        environment:
+          C2NG_REV: refs/tags/c2ng-2.41.5
+          AFL_REV: refs/tags/c2ng-2.41.5

@@ -70,6 +70,10 @@ multiPackage:
         environment:
           PCC2_REV: release_2_0_17
           CPLUSLIB_REV: release_2_0_17
+      "2.1":
+        environment:
+          PCC2_REV: release_2_1
+          CPLUSLIB_REV: release_2_0_17
   windows:
     inherit:
       - env::i386-win32-gcc8
@@ -83,4 +87,9 @@ multiPackage:
       2.0.17:
         environment:
           PCC2_REV: release_2_0_17
+          CPLUSLIB_REV: release_2_0_17
+    multiPackage:
+      "2.1":
+        environment:
+          PCC2_REV: release_2_1
           CPLUSLIB_REV: release_2_0_17
